@@ -13,7 +13,7 @@ trait AsHashed
         static::retrieved(static function ($model): void {
             foreach ($model->getAttributes() as $key => $value) {
                 if ('id' === $key || str_ends_with($key, '_id')) {
-                    $model->{"{$key}_hashed"} = Hashids::encode($value);
+                    $model->{"hash_{$key}"} = Hashids::encode($value);
                 }
             }
         });
