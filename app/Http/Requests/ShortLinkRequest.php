@@ -17,7 +17,7 @@ final class ShortLinkRequest extends FormRequest
             'slug'     => [
                 'nullable',
                 'string',
-                'max:255',
+                'max:55',
                 Rule::unique('short_links', 'slug'),
                 new SlugRule(),
             ],

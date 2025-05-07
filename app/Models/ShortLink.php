@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Models\Traits\AsHashed;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,6 +28,16 @@ final class ShortLink extends Model
         $query->when(
             $userId,
             fn (Builder $query) => $query->where('user_id', $userId)
+        );
+    }
+
+    public function shortLink(): Attribute
+    {
+        return Attribute::get(
+            fn () => route(
+                when($this->slug, 'link-short.redirect.slug', 'link-short.redirect.id'),
+                $this->slug ?: $this->hash_id
+            )
         );
     }
 }
