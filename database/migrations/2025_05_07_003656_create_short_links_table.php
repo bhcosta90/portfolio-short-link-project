@@ -14,6 +14,7 @@ return new class() extends Migration {
             $table->foreignId('user_id')->nullable()->constrained('users');
             $table->string('slug')->nullable()->index();
             $table->string('endpoint');
+            $table->boolean('is_premium')->nullable();
             $table->timestamps();
         });
     }

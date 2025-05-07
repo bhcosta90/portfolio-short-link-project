@@ -29,7 +29,8 @@ final class ShortLinkController extends Controller
     public function store(ShortLinkRequest $request): ShortLinkResource
     {
         $shortLink = ShortLink::create($request->validated() + [
-            'user_id' => Auth::id(),
+            'user_id'    => Auth::id(),
+            'is_premium' => when(Auth::user()?->is_premium, true),
         ]);
 
         return new ShortLinkResource($shortLink->refresh());

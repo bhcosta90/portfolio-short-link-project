@@ -18,6 +18,7 @@ final class ShortLink extends Model
         'user_id',
         'slug',
         'endpoint',
+        'is_premium',
     ];
 
     #[Scope]
