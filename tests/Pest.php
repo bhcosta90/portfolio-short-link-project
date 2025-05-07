@@ -45,7 +45,7 @@ expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 function loginWithUser(?User $user = null): User
 {
-    $user = when(null === $user, User::factory()->create(), $user);
+    $user = when(!$user instanceof User, User::factory()->create(), $user);
     Illuminate\Support\Facades\Auth::login($user);
 
     return $user;
