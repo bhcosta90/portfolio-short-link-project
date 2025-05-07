@@ -61,7 +61,7 @@ final class ShortLinkController extends Controller
         return $this->responseShortLink($shortLink);
     }
 
-    private function responseShortLink(ShortLink $shortLink): RedirectResponse | string
+    protected function responseShortLink(ShortLink $shortLink): RedirectResponse | string
     {
         if (app()->isLocal()) {
             return __('Vai ser redirecionado para o endpoint: :endpoint', [
