@@ -12,6 +12,6 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function () {
     Route::apiResource('short-links', ShortLinkController::class)
-        ->only(['index', 'store'])
+        ->only(['index', 'store', 'show'])
         ->middleware(request()->header('Authorization') ? 'auth:sanctum' : null);
 });

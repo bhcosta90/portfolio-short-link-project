@@ -4,12 +4,14 @@ declare(strict_types = 1);
 
 namespace App\Models;
 
+use App\Models\Traits\AsHashed;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 final class ShortLink extends Model
 {
+    use AsHashed;
     protected $fillable = [
         'user_id',
         'slug',

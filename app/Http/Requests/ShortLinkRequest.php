@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Http\Requests;
 
+use App\Rules\SlugRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -13,7 +14,13 @@ final class ShortLinkRequest extends FormRequest
     {
         return [
             'endpoint' => ['required'],
-            'slug'     => ['nullable', 'string', 'max:255', Rule::unique('short_links', 'slug')],
+            'slug'     => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('short_links', 'slug'),
+                new SlugRule(),
+            ],
         ];
     }
 
