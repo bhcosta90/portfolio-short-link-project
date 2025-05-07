@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Vinkla\Hashids\Facades\Hashids;
 
 final class ShortLinkController extends Controller
@@ -49,30 +50,36 @@ final class ShortLinkController extends Controller
 
     public function redirectId(string $hashId): RedirectResponse | string
     {
-        $shortLink = ShortLink::query()
-            ->whereId(Hashids::decode($hashId))
-            ->firstOrFail();
+        $shortLink = Cache::remember('id_' . $hashId, 60 * 24, static function () use ($hashId) {
+            return ShortLink::query()
+                ->whereId(Hashids::decode($hashId))
+                ->firstOrFail()
+                ->endpoint;
+        });
 
         return $this->responseShortLink($shortLink);
     }
 
     public function redirectSlug(string $slug): RedirectResponse | string
     {
-        $shortLink = ShortLink::query()
-            ->whereSlug($slug)
-            ->firstOrFail();
+        $shortLink = Cache::remember('slug_' . $slug, 60 * 24, static function () use ($slug) {
+            return ShortLink::query()
+                ->whereSlug($slug)
+                ->firstOrFail()
+                ->endpoint;
+        });
 
         return $this->responseShortLink($shortLink);
     }
 
-    protected function responseShortLink(ShortLink $shortLink): RedirectResponse | string
+    protected function responseShortLink(string $endpoint): RedirectResponse | string
     {
         if (app()->isLocal()) {
             return __('Vai ser redirecionado para o endpoint: :endpoint', [
-                'endpoint' => $shortLink->endpoint,
+                'endpoint' => $endpoint,
             ]);
         }
 
-        return response()->redirectTo($shortLink->endpoint);
+        return response()->redirectTo($endpoint);
     }
 }
