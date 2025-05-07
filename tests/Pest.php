@@ -13,8 +13,10 @@ declare(strict_types = 1);
 |
 */
 
+use App\Models\User;
+
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(Illuminate\Foundation\Testing\LazilyRefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -41,7 +43,10 @@ expect()->extend('toBeOne', fn () => $this->toBe(1));
 |
 */
 
-function something(): void
+function loginWithUser(?User $user = null): User
 {
-    // ..
+    $user = when(null === $user, User::factory()->create(), $user);
+    Illuminate\Support\Facades\Auth::login($user);
+
+    return $user;
 }
