@@ -11,15 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ShortLinkController extends Controller
 {
-    public function __construct()
-    {
-        if(request()->header('Authorization')){
-            $this->middleware('auth:sanctum')
-                ->only('index');
-        }
-    }
-
-
     public function index(): AnonymousResourceCollection {
 
         abort_unless(Auth::check(), 403, __('Unauthorized access'));

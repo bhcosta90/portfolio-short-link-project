@@ -10,9 +10,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix('v1')->group(function () {
-    Route::apiResource('short-links', ShortLinkController::class);
+    Route::apiResource('short-links', ShortLinkController::class)
+        ->only(['index', 'store'])
+        ->middleware(request()->header('Authorization') ? 'auth:sanctum' : null);
 });
-
-//Route::get('test', function(){
-//    User::first()
-//})
