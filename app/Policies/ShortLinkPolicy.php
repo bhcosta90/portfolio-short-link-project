@@ -11,7 +11,7 @@ final class ShortLinkPolicy
 {
     use HandlesAuthorization;
 
-    public function registerSlugs(User $user): bool
+    public function registerSlugs(): bool
     {
         return true;
     }
