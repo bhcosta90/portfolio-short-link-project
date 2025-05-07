@@ -56,12 +56,8 @@ final class ShortLinkController extends Controller
         return $this->responseShortLink($shortLink);
     }
 
-    public function redirectSlug(string $slug): RedirectResponse | string
+    public function redirectSlug(ShortLink $shortLink): RedirectResponse | string
     {
-        $shortLink = ShortLink::query()
-            ->whereSlug($slug)
-            ->firstOrFail();
-
         return $this->responseShortLink($shortLink);
     }
 

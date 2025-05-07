@@ -17,4 +17,4 @@ Route::prefix('api')->group(function (): void {
 });
 
 Route::get('/r/{hashId}', [ShortLinkController::class, 'redirectId'])->name('link-short.redirect.id');
-Route::get('/s/{hashId}', [ShortLinkController::class, 'redirectSlug'])->name('link-short.redirect.slug');
+Route::get('/s/{shortLink:slug}', [ShortLinkController::class, 'redirectSlug'])->name('link-short.redirect.slug');
