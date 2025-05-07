@@ -64,7 +64,7 @@ test('it creates a short link for premium users', function (): void {
 test('it retrieves a short link by its hash ID', function (): void {
     $shortLink = ShortLink::factory()->create()->refresh();
 
-    $this->getJson('/api/v1/short-links/' . $shortLink->hash_id)->dump()->assertJsonStructure([
+    $this->getJson('/api/v1/short-links/' . $shortLink->hash_id)->assertJsonStructure([
         'data' => [
             'id',
             'endpoint',
