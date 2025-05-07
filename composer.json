@@ -63,7 +63,8 @@
             "@php artisan test"
         ],
         "format": [
-            "rector"
+            "rector",
+            "pint"
         ]
     },
     "extra": {
