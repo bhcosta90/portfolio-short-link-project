@@ -12,11 +12,8 @@ final class SlugRule implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (filled($value)
-            && auth()->check()
-            && !auth()->user()->can('registerSlugs', ShortLink::class)) {
+        if (filled($value) && (!auth()->check() || !auth()->user()->can('registerSlugs', ShortLink::class))) {
             $fail(__('You are not allowed to record slugs, please become premium.'));
         }
-
     }
 }

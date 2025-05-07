@@ -7,11 +7,13 @@ namespace App\Models;
 use App\Models\Traits\AsHashed;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 final class ShortLink extends Model
 {
     use AsHashed;
+    use HasFactory;
     protected $fillable = [
         'user_id',
         'slug',

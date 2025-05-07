@@ -10,6 +10,7 @@ use App\Models\ShortLink;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Vinkla\Hashids\Facades\Hashids;
 
 final class ShortLinkController extends Controller
 {
@@ -34,8 +35,12 @@ final class ShortLinkController extends Controller
         return new ShortLinkResource($shortLink->refresh());
     }
 
-    public function show(ShortLink $shortLink): ShortLinkResource
+    public function show(string $short_link): ShortLinkResource
     {
+        $shortLink = ShortLink::query()
+            ->whereId(Hashids::decode($short_link))
+            ->firstOrFail();
+
         return new ShortLinkResource($shortLink);
     }
 }
