@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ShortLinkResource;
 use App\Models\ShortLink;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class ShortLinkController extends Controller
+final class ShortLinkController extends Controller
 {
-    public function index(): AnonymousResourceCollection {
+    public function index(): AnonymousResourceCollection
+    {
 
         abort_unless(Auth::check(), 403, __('Unauthorized access'));
 

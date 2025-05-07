@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class ShortLink extends Model {
+final class ShortLink extends Model
+{
     protected $fillable = [
         'user_id',
         'slug',
@@ -14,7 +17,8 @@ class ShortLink extends Model {
     ];
 
     #[Scope]
-    public function byUser(Builder $query, ?int $userId): void{
+    public function byUser(Builder $query, ?int $userId): void
+    {
         $query->when(
             $userId,
             fn (Builder $query) => $query->where('user_id', $userId)
