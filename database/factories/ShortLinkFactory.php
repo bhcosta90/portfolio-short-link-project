@@ -16,6 +16,8 @@ final class ShortLinkFactory extends Factory
     {
         return [
             'endpoint'   => $this->faker->url(),
+            'code'       => str()->random(10),
+            'expired_at' => now()->addDay(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

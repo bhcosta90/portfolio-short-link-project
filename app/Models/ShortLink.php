@@ -20,6 +20,12 @@ final class ShortLink extends Model
         'slug',
         'endpoint',
         'is_premium',
+        'expired_at',
+        'code',
+    ];
+
+    protected $casts = [
+        'expired_at' => 'datetime',
     ];
 
     #[Scope]
