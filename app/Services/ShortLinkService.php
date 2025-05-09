@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\ShortLink;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 final class ShortLinkService
 {
@@ -25,6 +26,15 @@ final class ShortLinkService
             'code'       => $this->generateNewCode(),
             'expired_at' => now()->addDays($days),
         ]);
+    }
+
+    /**
+     * @return Builder<ShortLink>
+     */
+    public function queryRedirect(): Builder
+    {
+        return ShortLink::query()
+            ->onlyValidated(true);
     }
 
     private function generateNewCode(): string
