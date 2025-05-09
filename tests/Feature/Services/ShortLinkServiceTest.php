@@ -17,13 +17,15 @@ it('creates a short link with the correct attributes', function () {
     ];
 
     $shortLinkService = new ShortLinkService();
-    $shortLink        = $shortLinkService->store(new User(), $data);
+    $shortLink        = $shortLinkService->store($data);
 
     expect($shortLink)->toBeInstanceOf(ShortLink::class)
         ->and($shortLink->endpoint)->toBe($data['endpoint'])
         ->and($shortLink->code)->not->toBeNull()
         ->and($shortLink->quantity_days_expired_at)->toBe(3);
 
-    $shortLink = $shortLinkService->store(new User(['is_premium' => true]), $data);
+    $user = User::factory()->premium()->create();
+
+    $shortLink = $shortLinkService->store($data + ['user_id' => $user->id]);
     expect($shortLink->quantity_days_expired_at)->toBe(7);
 });

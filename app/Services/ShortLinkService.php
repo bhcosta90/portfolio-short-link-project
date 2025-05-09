@@ -13,13 +13,17 @@ final class ShortLinkService
     public const TOTAL_DAYS_FREE    = 3;
     public const TOTAL_DAYS_PREMIUM = 7;
 
-    public function store(?User $user, array $data): ShortLink
+    public function store(array $data): ShortLink
     {
         $days = self::TOTAL_DAYS_FREE;
 
-        if ($user?->is_premium) {
-            $data['is_premium'] = true;
-            $days               = self::TOTAL_DAYS_PREMIUM;
+        if (filled($data['user_id'] ?? null)) {
+            $user = User::find($data['user_id']);
+
+            if ($user->is_premium) {
+                $data['is_premium'] = true;
+                $days               = self::TOTAL_DAYS_PREMIUM;
+            }
         }
 
         return ShortLink::create($data + [

@@ -32,13 +32,10 @@ final class UserFactory extends Factory
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
+    public function premium(): self
     {
         return $this->state(fn (array $attributes): array => [
-            'email_verified_at' => null,
+            'is_premium' => true,
         ]);
     }
 }
