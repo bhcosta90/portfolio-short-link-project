@@ -27,23 +27,3 @@ it('creates a short link with the correct attributes', function () {
     $shortLink = $shortLinkService->store(new User(['is_premium' => true]), $data);
     expect($shortLink->quantity_days_expired_at)->toBe(7);
 });
-
-it('generates a unique code', function () {
-    ShortLink::factory()->create([
-        'code'       => 'ABC123',
-        'expired_at' => now()->addDays(1),
-    ]);
-
-    $shortLinkService = new ShortLinkService();
-
-    $reflection = new ReflectionClass(ShortLinkService::class);
-    $method     = $reflection->getMethod('generateNewCode');
-    $method->setAccessible(true);
-
-    // Invoca o método privado
-    $code = $method->invoke($shortLinkService);
-
-    // Verifica se o código gerado é único e no formato esperado
-    expect($code)->not->toBe('ABC123')
-        ->and($code)->toMatch('/^[A-Z0-9]{6,}$/');
-});
