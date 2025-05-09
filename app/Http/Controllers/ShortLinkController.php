@@ -49,6 +49,7 @@ final class ShortLinkController extends Controller
     {
         $shortLink = Cache::remember('id_' . $code, 60 * 24, static function () use ($code) {
             return ShortLink::query()
+                ->onlyValidated(true)
                 ->whereCode($code)
                 ->firstOrFail()
                 ->endpoint;
@@ -61,6 +62,7 @@ final class ShortLinkController extends Controller
     {
         $shortLink = Cache::remember('slug_' . $slug, 60 * 24, static function () use ($slug) {
             return ShortLink::query()
+                ->onlyValidated(true)
                 ->whereSlug($slug)
                 ->firstOrFail()
                 ->endpoint;

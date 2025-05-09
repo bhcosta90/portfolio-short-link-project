@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Models;
 
 use App\Models\Traits\AsHashed;
-use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,12 +27,19 @@ final class ShortLink extends Model
         'expired_at' => 'datetime',
     ];
 
-    #[Scope]
-    public function byUser(Builder $query, ?int $userId): void
+    public function scopeByUser(Builder $query, ?int $userId): void
     {
         $query->when(
             $userId,
             fn (Builder $query) => $query->where('user_id', $userId)
+        );
+    }
+
+    public function scopeOnlyValidated(Builder $query, bool $accept = false): void
+    {
+        $query->when(
+            $accept,
+            fn (Builder $query) => $query->where('expired_at', '<=', now())
         );
     }
 
