@@ -21,7 +21,11 @@ it('creates a short link with the correct attributes', function () {
 
     expect($shortLink)->toBeInstanceOf(ShortLink::class)
         ->and($shortLink->endpoint)->toBe($data['endpoint'])
-        ->and($shortLink->code)->not->toBeNull();
+        ->and($shortLink->code)->not->toBeNull()
+        ->and($shortLink->quantity_days_expired_at)->toBe(3);
+
+    $shortLink = $shortLinkService->store(new User(['is_premium' => true]), $data);
+    expect($shortLink->quantity_days_expired_at)->toBe(7);
 });
 
 it('generates a unique code', function () {

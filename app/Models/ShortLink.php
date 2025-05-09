@@ -46,4 +46,11 @@ final class ShortLink extends Model
             )
         );
     }
+
+    public function quantityDaysExpiredAt(): Attribute
+    {
+        return Attribute::get(
+            fn () => (int) ceil($this->expired_at->diffInDays() * -1)
+        );
+    }
 }
