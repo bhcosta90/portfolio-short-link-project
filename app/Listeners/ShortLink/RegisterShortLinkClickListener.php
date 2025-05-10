@@ -9,7 +9,7 @@ use App\Events\ShortLinkClick\ClickShortLinkCreatedEvent;
 use App\Models\ShortLink;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-final class ClickShortLinkListener implements ShouldQueue
+final class RegisterShortLinkClickListener implements ShouldQueue
 {
     public function __construct()
     {

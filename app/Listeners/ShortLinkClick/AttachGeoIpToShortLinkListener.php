@@ -12,7 +12,7 @@ use App\Repository\GeoIp\SearchOutput;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-final class GeoIpListener implements ShouldQueue
+final class AttachGeoIpToShortLinkListener implements ShouldQueue
 {
     use InteractsWithQueue;
 
