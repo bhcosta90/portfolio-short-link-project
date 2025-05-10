@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
+use App\Events\RegisterClickShortLinkEvent;
 use App\Http\Requests\ShortLinkRequest;
 use App\Http\Resources\ShortLinkResource;
 use App\Models\ShortLink;
@@ -73,6 +74,12 @@ final class ShortLinkController extends Controller
 
     protected function responseShortLink(array $data): RedirectResponse | string
     {
+        event(new RegisterClickShortLinkEvent(
+            id: $data['id'],
+            endpoint: $data['endpoint'],
+            ipAddress: request()->ip(),
+        ));
+
         if (app()->isLocal()) {
             return __('Vai ser redirecionado para o endpoint: :endpoint', [
                 'endpoint' => $data['endpoint'],
