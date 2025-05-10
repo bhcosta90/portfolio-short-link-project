@@ -6,6 +6,7 @@ namespace App\Listeners;
 
 use App\Events\RegisterClickShortLinkEvent;
 use App\Models\GeoIp;
+use App\Models\ShortLink;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Http;
@@ -30,6 +31,7 @@ final class GeoIpListener implements ShouldQueue
 
         $geoIp = GeoIp::query()->whereIpAddress($ip)
             ->whereIsSuccess(true)
+            ->where('created_at', '>=', now()->subDay())
             ->exists();
 
         if ($geoIp) {
@@ -45,7 +47,7 @@ final class GeoIpListener implements ShouldQueue
                 ->get("http://ip-api.com/json/{$ip}");
 
             if ($response->successful() && 'success' === $response['status']) {
-                $data = [
+                $data += [
                     'is_success'   => true,
                     'country'      => $response['country'],
                     'region'       => $response['region'],
@@ -62,14 +64,14 @@ final class GeoIpListener implements ShouldQueue
                 ];
             }
         } catch (Throwable) {
-            $data = [
+            $data += [
                 'is_success' => false,
             ];
 
         }
 
-        GeoIp::updateOrCreate([
-            'ip_address' => $ip,
-        ], $data);
+        $geoIp     = GeoIp::create($data);
+        $shortLink = ShortLink::find($event->id);
+        $shortLink->shortLinkGeoIp()->attach($geoIp);
     }
 }

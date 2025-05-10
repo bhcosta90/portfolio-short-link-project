@@ -11,7 +11,7 @@ return new class() extends Migration {
     {
         Schema::create('geo_ips', function (Blueprint $table) {
             $table->id();
-            $table->ipAddress()->unique();
+            $table->ipAddress();
             $table->boolean('is_success')->boolean();
             $table->string('country')->nullable();
             $table->string('country_code', 2)->nullable();
