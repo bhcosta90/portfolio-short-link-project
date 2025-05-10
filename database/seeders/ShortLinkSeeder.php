@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Database\Seeders;
 
-use App\Events\ShortLink\ClickShortLinkCreate;
+use App\Events\ShortLink\ShortLinkClickCreated;
 use App\Models\GeoIp;
 use App\Models\ShortLink;
 use Illuminate\Database\Seeder;
@@ -36,7 +36,7 @@ final class ShortLinkSeeder extends Seeder
                 };
 
                 for ($i = 0; $i < $total; ++$i) {
-                    event(new ClickShortLinkCreate(
+                    event(new ShortLinkClickCreated(
                         id: $shortLink->id,
                         endpoint: $shortLink->endpoint,
                         ipAddress: $ip,

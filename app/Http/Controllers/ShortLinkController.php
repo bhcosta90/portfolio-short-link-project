@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
-use App\Events\ShortLink\ClickShortLinkCreate;
+use App\Events\ShortLink\ShortLinkClickCreated;
 use App\Http\Requests\ShortLinkRequest;
 use App\Http\Resources\ShortLinkClickResource;
 use App\Http\Resources\ShortLinkResource;
@@ -100,7 +100,7 @@ final class ShortLinkController extends Controller
         }
 
         return DB::transaction(function () use ($data, $ip) {
-            event(new ClickShortLinkCreate(
+            event(new ShortLinkClickCreated(
                 id: $data['id'],
                 endpoint: $data['endpoint'],
                 ipAddress: $ip,
