@@ -18,7 +18,7 @@ final class AddClickOnShortLinkListener implements ShouldQueue
     {
         $shortLink = ShortLink::query()->findOrFail($event->id);
 
-        $shortLink?->shortLinkClick()->create([
+        $shortLink?->shortLinkClicks()->create([
             'ip_address' => $event->ipAddress,
             'endpoint'   => $event->endpoint,
         ]);
