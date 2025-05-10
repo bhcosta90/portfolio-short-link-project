@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Listeners;
 
-use App\Events\RegisterClickShortLinkEvent;
+use App\Events\CreateClickShortLink;
 use App\Models\GeoIp;
 use App\Models\ShortLink;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,7 +25,7 @@ final class GeoIpListener implements ShouldQueue
         //
     }
 
-    public function handle(RegisterClickShortLinkEvent $event): void
+    public function handle(CreateClickShortLink $event): void
     {
         $ip = $event->ipAddress;
 

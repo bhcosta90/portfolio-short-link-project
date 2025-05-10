@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
-use App\Events\RegisterClickShortLinkEvent;
+use App\Events\CreateClickShortLink;
 use App\Http\Requests\ShortLinkRequest;
 use App\Http\Resources\ShortLinkClickResource;
 use App\Http\Resources\ShortLinkResource;
@@ -97,7 +97,7 @@ final class ShortLinkController extends Controller
             $ip = $newIp;
         }
 
-        event(new RegisterClickShortLinkEvent(
+        event(new CreateClickShortLink(
             id: $data['id'],
             endpoint: $data['endpoint'],
             ipAddress: $ip,
