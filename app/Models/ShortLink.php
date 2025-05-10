@@ -61,7 +61,7 @@ final class ShortLink extends Model
         );
     }
 
-    public function shortLinkClick(): HasMany
+    public function shortLinkClicks(): HasMany
     {
         return $this->hasMany(ShortLinkClick::class);
     }
