@@ -39,7 +39,7 @@ final class ShortLink extends Model
     {
         $query->when(
             $accept,
-            fn (Builder $query) => $query->where('expired_at', '<=', now())
+            fn (Builder $query) => $query->where('expired_at', '>=', now())
         );
     }
 
