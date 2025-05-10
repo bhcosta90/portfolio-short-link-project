@@ -51,7 +51,7 @@ test('it creates a short link for premium users', function (): void {
 
     $this->postJson('/api/v1/short-links', [
         'endpoint' => fake()->url(),
-        'slug'     => fake()->slug(),
+        'slug'     => mb_substr(fake()->slug(), 0, 55),
     ])->assertJsonStructure([
         'data' => [
             'id',
