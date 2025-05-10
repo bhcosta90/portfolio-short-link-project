@@ -3,7 +3,7 @@
 declare(strict_types = 1);
 
 return [
-    'ip' => config('GEO_IP_SELF'),
+    'ip' => env('GEO_IP_SELF'),
 
     //    'fake_ips' => [
     //        env('IP_SELF'), // My Ip,
