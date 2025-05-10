@@ -6,7 +6,7 @@ namespace App\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 
-final class CreateClickShortLink
+final readonly class CreateClickShortLink
 {
     use Dispatchable;
 

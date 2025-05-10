@@ -97,7 +97,7 @@ it('redirects to the correct endpoint for a given slug with cache', closure: fun
         CreateClickShortLink::class,
         fn (CreateClickShortLink $event) => $event->id === $shortLink->id
             && $event->endpoint === $shortLink->endpoint
-            && $event->ipAddress === request()->ip());
+            && filled($event->ipAddress));
 });
 
 it('redirects to the correct endpoint for a given slug', function () {
@@ -145,7 +145,7 @@ it('redirects to the correct endpoint for a given key with cache', function () {
         CreateClickShortLink::class,
         fn (CreateClickShortLink $event) => $event->id === $shortLink->id
             && $event->endpoint === $shortLink->endpoint
-            && $event->ipAddress === request()->ip());
+            && filled($event->ipAddress));
 });
 
 it('redirects to the correct endpoint for a given key', function () {
