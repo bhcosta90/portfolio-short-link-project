@@ -53,7 +53,7 @@ final class ShortLinkController extends Controller
             return $service->queryRedirect()
                 ->whereCode($code)
                 ->firstOrFail()
-                ->endpoint;
+                ->toArray();
         });
 
         return $this->responseShortLink($shortLink);
@@ -65,20 +65,20 @@ final class ShortLinkController extends Controller
             return $service->queryRedirect()
                 ->whereSlug($slug)
                 ->firstOrFail()
-                ->endpoint;
+                ->toArray();
         });
 
         return $this->responseShortLink($shortLink);
     }
 
-    protected function responseShortLink(string $endpoint): RedirectResponse | string
+    protected function responseShortLink(array $data): RedirectResponse | string
     {
         if (app()->isLocal()) {
             return __('Vai ser redirecionado para o endpoint: :endpoint', [
-                'endpoint' => $endpoint,
+                'endpoint' => $data['endpoint'],
             ]);
         }
 
-        return response()->redirectTo($endpoint);
+        return response()->redirectTo($data['endpoint']);
     }
 }
