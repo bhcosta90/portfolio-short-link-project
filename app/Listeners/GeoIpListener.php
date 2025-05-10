@@ -31,7 +31,7 @@ final class GeoIpListener implements ShouldQueue
 
         $geoIp = GeoIp::query()->whereIpAddress($ip)
             ->whereIsSuccess(true)
-            ->where('created_at', '>=', now()->subDay())
+            ->where('created_at', '<=', now()->subDay())
             ->exists();
 
         if ($geoIp) {

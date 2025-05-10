@@ -20,7 +20,7 @@ final class ShortLinkClickResource extends JsonResource
             'ip_address'    => $this->ip_address,
             'created_at'    => $this->created_at,
             'updated_at'    => $this->updated_at,
-            'geo_ip'        => new GeoIpResource($this->whenLoaded('geoIp')),
+            'geo_ip'        => $this->whenLoaded('shortLinkGeoIp', fn () => new GeoIpResource($this->shortLinkGeoIp->first())),
         ];
     }
 }

@@ -57,9 +57,10 @@ final class ShortLinkController extends Controller
     {
         $clicks = ShortLinkClick::query()
             ->with([
-                'geoIp' => fn ($query) => $query->whereIsSuccess(true),
+                'shortLinkGeoIp' => fn ($query) => $query->whereIsSuccess(true),
             ])
             ->whereShortLinkId(Hashids::decode($short_link))
+            ->orderBy('id', 'desc')
             ->paginate();
 
         return ShortLinkClickResource::collection($clicks);

@@ -12,7 +12,9 @@ final class ShortLinkSeeder extends Seeder
 {
     public function run(): void
     {
-        $shortLink = ShortLink::factory()->create();
+        $shortLink = ShortLink::factory()->create([
+            'code' => 'INFXLU',
+        ]);
 
         foreach ($this->getIps() as $ip => $value) {
             GeoIp::create([

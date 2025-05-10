@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 return new class() extends Migration {
     public function up(): void
     {
-        Schema::create('geo_ip_short_link', function (Blueprint $table) {
+        Schema::create('geo_ip_short_link_click', function (Blueprint $table) {
             $table->foreignId('geo_ip_id')->constrained();
             $table->foreignId('short_link_click_id')->constrained();
         });
@@ -17,6 +17,6 @@ return new class() extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('geo_ip_short_link');
+        Schema::dropIfExists('geo_ip_short_link_click');
     }
 };
