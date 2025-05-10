@@ -49,7 +49,7 @@ final class ShortLink extends Model
         return Attribute::get(
             fn () => route(
                 when($this->slug, 'link-short.redirect.slug', 'link-short.redirect.id'),
-                $this->slug ?: $this->hash_id
+                $this->slug ?: $this->code
             )
         );
     }
