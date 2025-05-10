@@ -9,14 +9,14 @@ use Throwable;
 
 final class IpApiGeoIp implements GeoIpInterface
 {
-    public function search(string $ip): GeoIpOutput
+    public function search(string $ip): SearchOutput
     {
         try {
             $response = Http::timeout(2)
                 ->get("http://ip-api.com/json/{$ip}");
 
             if ($response->successful() && 'success' === $response['status']) {
-                return new GeoIpOutput(
+                return new SearchOutput(
                     country: $response['country'],
                     region: $response['region'],
                     regionName: $response['regionName'],
@@ -33,7 +33,7 @@ final class IpApiGeoIp implements GeoIpInterface
                 );
             }
         } catch (Throwable) {
-            return new GeoIpOutput();
+            return new SearchOutput();
         }
     }
 }

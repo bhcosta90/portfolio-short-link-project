@@ -6,5 +6,5 @@ namespace App\Repository\GeoIp;
 
 interface GeoIpInterface
 {
-    public function search(string $ip): GeoIpOutput;
+    public function search(string $ip): SearchOutput;
 }

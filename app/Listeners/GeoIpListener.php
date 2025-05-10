@@ -8,7 +8,7 @@ use App\Events\CreatedClickShortLinkEvent;
 use App\Facades\GeoIpFacade;
 use App\Models\GeoIp;
 use App\Models\ShortLinkClick;
-use App\Repository\GeoIp\GeoIpOutput;
+use App\Repository\GeoIp\SearchOutput;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -60,14 +60,14 @@ final class GeoIpListener implements ShouldQueue
         return $geoIp && $geoIp->created_at->diffInDays(now()) < 1;
     }
 
-    private function shouldCreateNewGeoIp(?GeoIp $geoIp, GeoIpOutput $searchGeoIp): bool
+    private function shouldCreateNewGeoIp(?GeoIp $geoIp, SearchOutput $searchGeoIp): bool
     {
         return blank($geoIp?->id)
             || $geoIp?->lat !== $searchGeoIp->lat
             || $geoIp?->lon !== $searchGeoIp->lon;
     }
 
-    private function createGeoIp(string $ip, GeoIpOutput $searchGeoIp): GeoIp
+    private function createGeoIp(string $ip, SearchOutput $searchGeoIp): GeoIp
     {
         return GeoIp::create([
             'ip_address'   => $ip,
