@@ -6,8 +6,10 @@ namespace App\Http\Controllers;
 
 use App\Events\RegisterClickShortLinkEvent;
 use App\Http\Requests\ShortLinkRequest;
+use App\Http\Resources\ShortLinkClickResource;
 use App\Http\Resources\ShortLinkResource;
 use App\Models\ShortLink;
+use App\Models\ShortLinkClick;
 use App\Services\ShortLinkService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -46,6 +48,18 @@ final class ShortLinkController extends Controller
             ->firstOrFail();
 
         return new ShortLinkResource($shortLink);
+    }
+
+    public function clicks(string $short_link): AnonymousResourceCollection
+    {
+        $clicks = ShortLinkClick::query()
+            ->with([
+                'geoIp' => fn ($query) => $query->whereIsSuccess(true),
+            ])
+            ->whereShortLinkId(Hashids::decode($short_link))
+            ->paginate();
+
+        return ShortLinkClickResource::collection($clicks);
     }
 
     public function redirectId(string $code, ShortLinkService $service): RedirectResponse | string
