@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Listeners\ShortLink;
 
-use App\Events\ShortLink\ShortLinkClickRecorded;
+use App\Events\ShortLink\ShortLinkRecordedEvent;
 use App\Events\ShortLinkClick\ShortLinkClickRecordedEvent;
 use App\Models\ShortLink;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,7 +15,7 @@ final class RegisterShortLinkClickListener implements ShouldQueue
     {
     }
 
-    public function handle(ShortLinkClickRecorded $event): void
+    public function handle(ShortLinkRecordedEvent $event): void
     {
         $shortLink = ShortLink::query()->findOrFail($event->id);
 
