@@ -11,7 +11,7 @@ return new class() extends Migration {
     {
         Schema::create('geo_ip_short_link', function (Blueprint $table) {
             $table->foreignId('geo_ip_id')->constrained();
-            $table->foreignId('short_link_id')->constrained();
+            $table->foreignId('short_link_click_id')->constrained();
         });
     }
 

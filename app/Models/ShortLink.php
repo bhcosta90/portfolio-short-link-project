@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 final class ShortLink extends Model
@@ -65,10 +64,5 @@ final class ShortLink extends Model
     public function shortLinkClicks(): HasMany
     {
         return $this->hasMany(ShortLinkClick::class);
-    }
-
-    public function shortLinkGeoIp(): BelongsToMany
-    {
-        return $this->belongsToMany(GeoIp::class);
     }
 }
