@@ -63,8 +63,8 @@ final class GeoIpListener implements ShouldQueue
     private function shouldCreateNewGeoIp(?GeoIp $geoIp, GeoIpOutput $searchGeoIp): bool
     {
         return blank($geoIp?->id)
-            || $geoIp->lat !== $searchGeoIp->lat
-            || $geoIp->lon !== $searchGeoIp->lon;
+            || $geoIp?->lat !== $searchGeoIp->lat
+            || $geoIp?->lon !== $searchGeoIp->lon;
     }
 
     private function createGeoIp(string $ip, GeoIpOutput $searchGeoIp): GeoIp
