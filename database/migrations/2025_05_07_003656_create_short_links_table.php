@@ -11,10 +11,12 @@ return new class() extends Migration {
     {
         Schema::create('short_links', function (Blueprint $table): void {
             $table->id();
+            $table->string('code')->index();
             $table->foreignId('user_id')->nullable()->constrained('users');
             $table->string('slug')->nullable()->index();
             $table->string('endpoint');
             $table->boolean('is_premium')->nullable();
+            $table->dateTime('expired_at');
             $table->timestamps();
         });
     }
