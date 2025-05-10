@@ -74,10 +74,16 @@ final class ShortLinkController extends Controller
 
     protected function responseShortLink(array $data): RedirectResponse | string
     {
+        $ip = request()->ip();
+
+        if ('127.0.0.1' === $ip && app()->isLocal() && filled($configGeoIp = config('geo-ip.ip'))) {
+            $ip = $configGeoIp;
+        }
+
         event(new RegisterClickShortLinkEvent(
             id: $data['id'],
             endpoint: $data['endpoint'],
-            ipAddress: request()->ip(),
+            ipAddress: $ip,
         ));
 
         if (app()->isLocal()) {

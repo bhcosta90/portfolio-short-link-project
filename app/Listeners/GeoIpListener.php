@@ -28,10 +28,6 @@ final class GeoIpListener implements ShouldQueue
     {
         $ip = $event->ipAddress;
 
-        if ('127.0.0.1' === $ip && app()->isLocal() && filled($configGeoIp = config('geo-ip.ip'))) {
-            $ip = $configGeoIp;
-        }
-
         $geoIp = GeoIp::query()->whereIpAddress($ip)
             ->whereIsSuccess(true)
             ->exists();
