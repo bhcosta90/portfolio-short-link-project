@@ -11,6 +11,7 @@ return new class() extends Migration {
     {
         Schema::create('short_link_clicks', function (Blueprint $table): void {
             $table->id();
+            $table->foreignId('short_link_id')->constrained();
             $table->string('endpoint');
             $table->string('ip_address');
             $table->timestamps();
