@@ -13,7 +13,7 @@ return new class() extends Migration {
             $table->id();
             $table->foreignId('short_link_id')->constrained();
             $table->string('endpoint');
-            $table->string('ip_address');
+            $table->ipAddress()->index();
             $table->timestamps();
         });
     }
