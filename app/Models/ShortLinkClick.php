@@ -10,5 +10,6 @@ final class ShortLinkClick extends Model
 {
     protected $fillable = [
         'ip_address',
+        'endpoint',
     ];
 }
