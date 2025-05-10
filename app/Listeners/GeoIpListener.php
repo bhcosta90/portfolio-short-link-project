@@ -15,8 +15,8 @@ final class GeoIpListener implements ShouldQueue
 {
     use InteractsWithQueue;
     //
-    //    public int $tries   = 3;
-    //    public int $backoff = 10;
+    public int $tries   = 3;
+    public int $backoff = 10;
     public int $timeout = 3; // Timeout em segundos
 
     public function __construct()
