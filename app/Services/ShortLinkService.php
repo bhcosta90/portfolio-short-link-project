@@ -41,7 +41,7 @@ final class ShortLinkService
 
     private function generateNewCode(): string
     {
-        $total    = 4;
+        $total    = 6;
         $iterator = 0;
 
         do {
