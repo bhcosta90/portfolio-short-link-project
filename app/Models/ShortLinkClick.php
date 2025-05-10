@@ -6,7 +6,7 @@ namespace App\Models;
 
 use App\Models\Traits\AsHashed;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 final class ShortLinkClick extends Model
 {
@@ -16,8 +16,8 @@ final class ShortLinkClick extends Model
         'endpoint',
     ];
 
-    public function shortLinkGeoIp(): BelongsToMany
+    public function shortLinkGeoIp(): BelongsTo
     {
-        return $this->belongsToMany(GeoIp::class);
+        return $this->belongsTo(GeoIp::class);
     }
 }

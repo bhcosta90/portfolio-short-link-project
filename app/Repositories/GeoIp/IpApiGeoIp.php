@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Repository\GeoIp;
+namespace App\Repositories\GeoIp;
 
 use Illuminate\Support\Facades\Http;
 use Throwable;

@@ -8,7 +8,7 @@ use App\Events\ShortLinkClick\ShortLinkClickRecordedEvent;
 use App\Facades\GeoIpFacade;
 use App\Models\GeoIp;
 use App\Models\ShortLinkClick;
-use App\Repository\GeoIp\SearchOutput;
+use App\Repositories\GeoIp\SearchOutput;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -32,7 +32,8 @@ final class AttachGeoIpToShortLinkListener implements ShouldQueue
         $shortLink = ShortLinkClick::find($event->id);
 
         if ($this->shouldAttachExistingGeoIp($geoIp)) {
-            $shortLink->shortLinkGeoIp()->attach($geoIp);
+            $shortLink->geo_ip_id = $geoIp?->id;
+            $shortLink->save();
 
             return;
         }
@@ -43,7 +44,8 @@ final class AttachGeoIpToShortLinkListener implements ShouldQueue
             $geoIp = $this->createGeoIp($event->ipAddress, $searchGeoIp);
         }
 
-        $shortLink->shortLinkGeoIp()->attach($geoIp);
+        $shortLink->geo_ip_id = $geoIp->id;
+        $shortLink->save();
     }
 
     private function getRecentGeoIp(string $ip): ?GeoIp
