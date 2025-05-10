@@ -16,6 +16,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Vinkla\Hashids\Facades\Hashids;
 
 final class ShortLinkController extends Controller
@@ -98,18 +99,20 @@ final class ShortLinkController extends Controller
             $ip = $newIp;
         }
 
-        event(new CreateClickShortLink(
-            id: $data['id'],
-            endpoint: $data['endpoint'],
-            ipAddress: $ip,
-        ));
+        return DB::transaction(function () use ($data, $ip) {
+            event(new CreateClickShortLink(
+                id: $data['id'],
+                endpoint: $data['endpoint'],
+                ipAddress: $ip,
+            ));
 
-        if (app()->isLocal()) {
-            return __('Vai ser redirecionado para o endpoint: :endpoint', [
-                'endpoint' => $data['endpoint'],
-            ]);
-        }
+            if (app()->isLocal()) {
+                return __('Vai ser redirecionado para o endpoint: :endpoint', [
+                    'endpoint' => $data['endpoint'],
+                ]);
+            }
 
-        return response()->redirectTo($data['endpoint']);
+            return response()->redirectTo($data['endpoint']);
+        });
     }
 }

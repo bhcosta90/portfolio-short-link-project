@@ -31,10 +31,15 @@ final class GeoIpListener implements ShouldQueue
 
         $geoIp = GeoIp::query()->whereIpAddress($ip)
             ->whereIsSuccess(true)
-            ->where('created_at', '<=', now()->subDay())
-            ->exists();
+            ->orderBy('id', 'desc')
+            ->limit(1)
+            ->first();
 
-        if ($geoIp) {
+        $shortLink = ShortLinkClick::find($event->id);
+
+        if ($geoIp && $geoIp->created_at->diffInDays(now()) < 1) {
+            $shortLink->shortLinkGeoIp()->attach($geoIp);
+
             return;
         }
 
@@ -70,8 +75,13 @@ final class GeoIpListener implements ShouldQueue
 
         }
 
-        $geoIp     = GeoIp::create($data);
-        $shortLink = ShortLinkClick::find($event->id);
+        if (blank($geoIp?->id)
+            || $geoIp->lat !== $data['lat']
+            || $geoIp->lon !== $data['lon']
+        ) {
+            $geoIp = GeoIp::create($data);
+        }
+
         $shortLink->shortLinkGeoIp()->attach($geoIp);
     }
 }

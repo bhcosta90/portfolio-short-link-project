@@ -4,24 +4,46 @@ declare(strict_types = 1);
 
 namespace Database\Seeders;
 
+use App\Events\CreateClickShortLink;
 use App\Models\GeoIp;
 use App\Models\ShortLink;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 final class ShortLinkSeeder extends Seeder
 {
     public function run(): void
     {
-        $shortLink = ShortLink::factory()->create([
-            'code' => 'INFXLU',
-        ]);
+        DB::transaction(function () {
+            $shortLink = ShortLink::factory()->create([
+                'code' => 'INFXLU',
+            ]);
 
-        foreach ($this->getIps() as $ip => $value) {
-            GeoIp::create([
-                'ip_address' => $ip,
-                'is_success' => true,
-            ] + $value);
-        }
+            foreach ($this->getIps() as $ip => $value) {
+                GeoIp::create([
+                    'ip_address' => $ip,
+                    'is_success' => true,
+                ] + $value);
+
+                $total = match ($ip) {
+                    '201.86.224.1' => 3,
+                    '189.56.120.1' => 2,
+                    '189.28.64.1'  => 4,
+                    '8.8.8.8'      => 2,
+                    '1.1.1.1'      => 3,
+                    '24.114.0.1'   => 2,
+                    default        => 1,
+                };
+
+                for ($i = 0; $i < $total; ++$i) {
+                    event(new CreateClickShortLink(
+                        id: $shortLink->id,
+                        endpoint: $shortLink->endpoint,
+                        ipAddress: $ip,
+                    ));
+                }
+            }
+        });
     }
 
     protected function getIps(): array
