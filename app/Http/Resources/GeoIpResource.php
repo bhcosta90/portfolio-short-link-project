@@ -14,7 +14,7 @@ final class GeoIpResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'           => $this->id,
+            'id'           => $this->hash_id,
             'ip_address'   => $this->ip_address,
             'is_success'   => $this->is_success,
             'country'      => $this->country,
