@@ -114,7 +114,7 @@ it('returns a message in local environment for a given slug', function () {
 
 it('redirects to the correct endpoint for a given key with cache', function () {
     $shortLink = ShortLink::factory()->create()->refresh();
-    $response  = $this->get('/r/' . $shortLink->hash_id);
+    $response  = $this->get('/r/' . $shortLink->code);
     $response->assertRedirect($shortLink->endpoint);
 });
 
