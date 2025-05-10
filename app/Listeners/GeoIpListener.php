@@ -5,12 +5,12 @@ declare(strict_types = 1);
 namespace App\Listeners;
 
 use App\Events\CreatedClickShortLinkEvent;
+use App\Facades\GeoIpFacade;
 use App\Models\GeoIp;
 use App\Models\ShortLinkClick;
+use App\Repository\GeoIpOutput;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Http;
-use Throwable;
 
 final class GeoIpListener implements ShouldQueue
 {
@@ -43,43 +43,29 @@ final class GeoIpListener implements ShouldQueue
             return;
         }
 
-        $data = [
-            'ip_address' => $ip,
-        ];
-
-        try {
-            $response = Http::timeout(2)
-                ->get("http://ip-api.com/json/{$ip}");
-
-            if ($response->successful() && 'success' === $response['status']) {
-                $data += [
-                    'is_success'   => true,
-                    'country'      => $response['country'],
-                    'region'       => $response['region'],
-                    'region_name'  => $response['regionName'],
-                    'country_code' => $response['countryCode'],
-                    'city'         => $response['city'],
-                    'zip'          => $response['zip'],
-                    'lat'          => $response['lat'],
-                    'lon'          => $response['lon'],
-                    'timezone'     => $response['timezone'],
-                    'isp'          => $response['isp'],
-                    'org'          => $response['org'],
-                    'as'           => $response['as'],
-                ];
-            }
-        } catch (Throwable) {
-            $data += [
-                'is_success' => false,
-            ];
-
-        }
+        /** @var GeoIpOutput $searchGeoIp */
+        $searchGeoIp = GeoIpFacade::search($ip);
 
         if (blank($geoIp?->id)
-            || $geoIp->lat !== $data['lat']
-            || $geoIp->lon !== $data['lon']
+            || $geoIp->lat !== $searchGeoIp->lat
+            || $geoIp->lon !== $searchGeoIp->lon
         ) {
-            $geoIp = GeoIp::create($data);
+            $geoIp = GeoIp::create([
+                'ip_address'   => $ip,
+                'country'      => $searchGeoIp->country,
+                'region'       => $searchGeoIp->region,
+                'region_name'  => $searchGeoIp->regionName,
+                'country_code' => $searchGeoIp->countryCode,
+                'city'         => $searchGeoIp->city,
+                'zip'          => $searchGeoIp->zip,
+                'lat'          => $searchGeoIp->lat,
+                'lon'          => $searchGeoIp->lon,
+                'timezone'     => $searchGeoIp->timezone,
+                'isp'          => $searchGeoIp->isp,
+                'org'          => $searchGeoIp->org,
+                'as'           => $searchGeoIp->as,
+                'is_success'   => $searchGeoIp->isSuccess,
+            ]);
         }
 
         $shortLink->shortLinkGeoIp()->attach($geoIp);
