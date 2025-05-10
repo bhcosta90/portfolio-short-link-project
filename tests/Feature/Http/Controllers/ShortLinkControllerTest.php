@@ -90,7 +90,10 @@ it('redirects to the correct endpoint for a given slug', function () {
     Cache::shouldReceive('remember')
         ->once()
         ->with('slug_test-slug', 60 * 24, Closure::class)
-        ->andReturn($shortLink->endpoint);
+        ->andReturn([
+            'id'       => $shortLink->id,
+            'endpoint' => $shortLink->endpoint,
+        ]);
 
     $response = $this->get('/s/test-slug');
 
@@ -105,7 +108,10 @@ it('returns a message in local environment for a given slug', function () {
     Cache::shouldReceive('remember')
         ->once()
         ->with('slug_test-slug', 60 * 24, Closure::class)
-        ->andReturn($shortLink->endpoint);
+        ->andReturn([
+            'id'       => $shortLink->id,
+            'endpoint' => $shortLink->endpoint,
+        ]);
 
     $response = $this->get('/s/test-slug');
 
@@ -124,7 +130,10 @@ it('redirects to the correct endpoint for a given key', function () {
     Cache::shouldReceive('remember')
         ->once()
         ->with('id_' . $shortLink->id, 60 * 24, Closure::class)
-        ->andReturn($shortLink->endpoint);
+        ->andReturn([
+            'id'       => $shortLink->id,
+            'endpoint' => $shortLink->endpoint,
+        ]);
 
     $response = $this->get('/r/' . $shortLink->id);
 
@@ -139,7 +148,10 @@ it('returns a message in local environment for a given key', function () {
     Cache::shouldReceive('remember')
         ->once()
         ->with('id_' . $shortLink->id, 60 * 24, Closure::class)
-        ->andReturn($shortLink->endpoint);
+        ->andReturn([
+            'id'       => $shortLink->id,
+            'endpoint' => $shortLink->endpoint,
+        ]);
 
     $response = $this->get('/r/' . $shortLink->id);
 
