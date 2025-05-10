@@ -7,7 +7,7 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-final class ShortLinkPolicy
+final readonly class ShortLinkPolicy
 {
     use HandlesAuthorization;
 
