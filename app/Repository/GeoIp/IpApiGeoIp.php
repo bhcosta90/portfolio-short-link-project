@@ -7,7 +7,7 @@ namespace App\Repository\GeoIp;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
-final class IpApiGeoIp implements GeoIpInterface
+final readonly class IpApiGeoIp implements GeoIpInterface
 {
     public function search(string $ip): SearchOutput
     {

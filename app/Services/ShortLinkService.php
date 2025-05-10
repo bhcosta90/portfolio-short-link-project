@@ -8,7 +8,7 @@ use App\Models\ShortLink;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
-final class ShortLinkService
+final readonly class ShortLinkService
 {
     public const TOTAL_DAYS_FREE    = 3;
     public const TOTAL_DAYS_PREMIUM = 7;
