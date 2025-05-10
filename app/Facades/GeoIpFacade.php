@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Facades;
 
-use App\Repository\IpApiGeoIp;
+use App\Repository\GeoIp\IpApiGeoIp;
 use Illuminate\Support\Facades\Facade;
 
 /**
