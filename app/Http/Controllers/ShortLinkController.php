@@ -96,7 +96,6 @@ final class ShortLinkController extends Controller
         if ($newIp = config('geo-ip.ip')) {
             $ip = $newIp;
         }
-        dd($ip);
 
         event(new RegisterClickShortLinkEvent(
             id: $data['id'],
