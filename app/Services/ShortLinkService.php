@@ -32,9 +32,6 @@ final class ShortLinkService
         ]);
     }
 
-    /**
-     * @return Builder<ShortLink>
-     */
     public function queryRedirect(): Builder
     {
         return ShortLink::query()
