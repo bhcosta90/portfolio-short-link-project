@@ -75,6 +75,7 @@ test('it retrieves a short link by its hash ID', function (): void {
             'id',
             'endpoint',
             'slug',
+            'clicks',
             'short_link',
             'code',
             'user_id',
