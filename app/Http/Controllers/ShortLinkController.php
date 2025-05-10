@@ -44,6 +44,9 @@ final class ShortLinkController extends Controller
     public function show(string $short_link): ShortLinkResource
     {
         $shortLink = ShortLink::query()
+            ->with([
+                'shortLinkClicks',
+            ])
             ->whereId(Hashids::decode($short_link))
             ->firstOrFail();
 
