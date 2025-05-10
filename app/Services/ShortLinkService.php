@@ -38,6 +38,7 @@ final class ShortLinkService
     public function queryRedirect(): Builder
     {
         return ShortLink::query()
+            ->select(['id', 'endpoint'])
             ->onlyValidated(true);
     }
 
