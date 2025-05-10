@@ -36,6 +36,10 @@ final class GeoIpListener implements ShouldQueue
             return;
         }
 
+        $data = [
+            'ip_address' => $ip,
+        ];
+
         try {
             $response = Http::timeout(2)
                 ->get("http://ip-api.com/json/{$ip}");
@@ -60,7 +64,6 @@ final class GeoIpListener implements ShouldQueue
         } catch (Throwable) {
             $data = [
                 'is_success' => false,
-                'ip_address' => $ip,
             ];
 
         }

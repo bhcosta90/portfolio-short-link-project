@@ -176,7 +176,7 @@ it('returns a message in local environment for a given key', function () {
             'endpoint' => $shortLink->endpoint,
         ]);
 
-    $response = $this->get('/r/' . $shortLink->id);
+    $response = $this->getJson('/r/' . $shortLink->id);
 
     $response->assertSee('Vai ser redirecionado para o endpoint: ' . $shortLink->endpoint);
 });
