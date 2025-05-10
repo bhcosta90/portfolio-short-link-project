@@ -4,10 +4,12 @@ declare(strict_types = 1);
 
 namespace App\Models;
 
+use App\Models\Traits\AsHashed;
 use Illuminate\Database\Eloquent\Model;
 
 final class GeoIp extends Model
 {
+    use AsHashed;
     protected $fillable = [
         'is_success',
         'ip_address',
