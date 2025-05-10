@@ -16,7 +16,7 @@ final class ShortLinkClick extends Model
         'endpoint',
     ];
 
-    public function shortLinkGeoIp(): BelongsTo
+    public function geoIp(): BelongsTo
     {
         return $this->belongsTo(GeoIp::class);
     }
