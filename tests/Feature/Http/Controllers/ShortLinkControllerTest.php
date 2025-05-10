@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-use App\Events\CreateClickShortLink;
+use App\Events\ShortLink\ClickShortLinkCreate;
 use App\Models\ShortLink;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
@@ -94,8 +94,8 @@ it('redirects to the correct endpoint for a given slug with cache', closure: fun
     $response->assertRedirect($shortLink->endpoint);
 
     Event::assertDispatched(
-        CreateClickShortLink::class,
-        fn (CreateClickShortLink $event) => $event->id === $shortLink->id
+        ClickShortLinkCreate::class,
+        fn (ClickShortLinkCreate $event) => $event->id === $shortLink->id
             && $event->endpoint === $shortLink->endpoint
             && filled($event->ipAddress));
 });
@@ -142,8 +142,8 @@ it('redirects to the correct endpoint for a given key with cache', function () {
     $response->assertRedirect($shortLink->endpoint);
 
     Event::assertDispatched(
-        CreateClickShortLink::class,
-        fn (CreateClickShortLink $event) => $event->id === $shortLink->id
+        ClickShortLinkCreate::class,
+        fn (ClickShortLinkCreate $event) => $event->id === $shortLink->id
             && $event->endpoint === $shortLink->endpoint
             && filled($event->ipAddress));
 });

@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace App\Listeners;
+namespace App\Listeners\ShortLinkClick;
 
-use App\Events\CreatedClickShortLinkEvent;
+use App\Events\ShortLinkClick\ClickShortLinkCreatedEvent;
 use App\Facades\GeoIpFacade;
 use App\Models\GeoIp;
 use App\Models\ShortLinkClick;
@@ -25,7 +25,7 @@ final class GeoIpListener implements ShouldQueue
         //
     }
 
-    public function handle(CreatedClickShortLinkEvent $event): void
+    public function handle(ClickShortLinkCreatedEvent $event): void
     {
         $geoIp = $this->getRecentGeoIp($event->ipAddress);
 

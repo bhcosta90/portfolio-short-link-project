@@ -2,11 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace App\Events;
+namespace App\Events\ShortLink;
 
 use Illuminate\Foundation\Events\Dispatchable;
 
-final readonly class CreateClickShortLink
+final readonly class ClickShortLinkCreate
 {
     use Dispatchable;
 
