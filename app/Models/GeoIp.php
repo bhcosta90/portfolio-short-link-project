@@ -30,7 +30,8 @@ final class GeoIp extends Model
     protected function casts(): array
     {
         return [
-            'is_success' => 'boolean',
+            'is_success'  => 'boolean',
+            'qtd_retries' => 'integer',
         ];
     }
 }

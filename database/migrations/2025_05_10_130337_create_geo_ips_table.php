@@ -13,6 +13,7 @@ return new class() extends Migration {
             $table->id();
             $table->ipAddress();
             $table->boolean('is_success')->boolean();
+            $table->unsignedTinyInteger('qtd_retries')->nullable();
             $table->string('country')->nullable();
             $table->string('country_code', 2)->nullable();
             $table->string('region', 10)->nullable();
