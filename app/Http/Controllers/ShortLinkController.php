@@ -90,8 +90,8 @@ final class ShortLinkController extends Controller
     {
         $ip = request()->ip();
 
-        if ('127.0.0.1' === $ip && app()->isLocal() && filled($configGeoIp = config('geo-ip.ip'))) {
-            $ip = $configGeoIp;
+        if ($newIp = config('geo-ip.ip')) {
+            $ip = $newIp;
         }
 
         event(new RegisterClickShortLinkEvent(
