@@ -20,6 +20,7 @@ final class ShortLinkResource extends JsonResource
             'code'       => $this->code,
             'short_link' => $this->short_link,
             'endpoint'   => $this->endpoint,
+            'expired_at' => $this->expired_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
