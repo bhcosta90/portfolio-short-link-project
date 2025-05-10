@@ -52,7 +52,7 @@ final class ShortLinkService
             $shortLink = ShortLink::query()->whereCode($code)->first();
             $exist     = (bool) $shortLink?->id;
 
-            if ($shortLink && $shortLink->expired_at < now()) {
+            if ($shortLink && $shortLink->expired_at >= now()) {
                 $exist = true;
             }
 
