@@ -2,6 +2,7 @@
 
 declare(strict_types = 1);
 
+use App\Events\RegisterClickShortLinkEvent;
 use App\Models\ShortLink;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
@@ -78,10 +79,18 @@ test('it retrieves a short link by its hash ID', function (): void {
     ]);
 });
 
-it('redirects to the correct endpoint for a given slug with cache', function () {
+it('redirects to the correct endpoint for a given slug with cache', closure: function () {
+    Illuminate\Support\Facades\Event::fake();
+
     $shortLink = ShortLink::factory()->create(['slug' => 'test-slug']);
     $response  = $this->get('/s/test-slug');
     $response->assertRedirect($shortLink->endpoint);
+
+    Event::assertDispatched(
+        RegisterClickShortLinkEvent::class,
+        fn (RegisterClickShortLinkEvent $event) => $event->id === $shortLink->id
+            && $event->endpoint === $shortLink->endpoint
+            && $event->ipAddress === request()->ip());
 });
 
 it('redirects to the correct endpoint for a given slug', function () {
@@ -119,9 +128,17 @@ it('returns a message in local environment for a given slug', function () {
 });
 
 it('redirects to the correct endpoint for a given key with cache', function () {
+    Illuminate\Support\Facades\Event::fake();
+
     $shortLink = ShortLink::factory()->create()->refresh();
     $response  = $this->get('/r/' . $shortLink->code);
     $response->assertRedirect($shortLink->endpoint);
+
+    Event::assertDispatched(
+        RegisterClickShortLinkEvent::class,
+        fn (RegisterClickShortLinkEvent $event) => $event->id === $shortLink->id
+            && $event->endpoint === $shortLink->endpoint
+            && $event->ipAddress === request()->ip());
 });
 
 it('redirects to the correct endpoint for a given key', function () {
