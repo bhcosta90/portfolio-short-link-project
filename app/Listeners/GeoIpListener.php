@@ -15,10 +15,10 @@ use Illuminate\Queue\InteractsWithQueue;
 final class GeoIpListener implements ShouldQueue
 {
     use InteractsWithQueue;
-    //
+
     public int $tries   = 3;
     public int $backoff = 10;
-    public int $timeout = 3; // Timeout em segundos
+    public int $timeout = 3;
 
     public function __construct()
     {
@@ -27,47 +27,63 @@ final class GeoIpListener implements ShouldQueue
 
     public function handle(CreatedClickShortLinkEvent $event): void
     {
-        $ip = $event->ipAddress;
-
-        $geoIp = GeoIp::query()->whereIpAddress($ip)
-            ->whereIsSuccess(true)
-            ->orderBy('id', 'desc')
-            ->limit(1)
-            ->first();
+        $geoIp = $this->getRecentGeoIp($event->ipAddress);
 
         $shortLink = ShortLinkClick::find($event->id);
 
-        if ($geoIp && $geoIp->created_at->diffInDays(now()) < 1) {
+        if ($this->shouldAttachExistingGeoIp($geoIp)) {
             $shortLink->shortLinkGeoIp()->attach($geoIp);
 
             return;
         }
 
-        /** @var GeoIpOutput $searchGeoIp */
-        $searchGeoIp = GeoIpFacade::search($ip);
+        $searchGeoIp = GeoIpFacade::search($event->ipAddress);
 
-        if (blank($geoIp?->id)
-            || $geoIp->lat !== $searchGeoIp->lat
-            || $geoIp->lon !== $searchGeoIp->lon
-        ) {
-            $geoIp = GeoIp::create([
-                'ip_address'   => $ip,
-                'country'      => $searchGeoIp->country,
-                'region'       => $searchGeoIp->region,
-                'region_name'  => $searchGeoIp->regionName,
-                'country_code' => $searchGeoIp->countryCode,
-                'city'         => $searchGeoIp->city,
-                'zip'          => $searchGeoIp->zip,
-                'lat'          => $searchGeoIp->lat,
-                'lon'          => $searchGeoIp->lon,
-                'timezone'     => $searchGeoIp->timezone,
-                'isp'          => $searchGeoIp->isp,
-                'org'          => $searchGeoIp->org,
-                'as'           => $searchGeoIp->as,
-                'is_success'   => $searchGeoIp->isSuccess,
-            ]);
+        if ($this->shouldCreateNewGeoIp($geoIp, $searchGeoIp)) {
+            $geoIp = $this->createGeoIp($event->ipAddress, $searchGeoIp);
         }
 
         $shortLink->shortLinkGeoIp()->attach($geoIp);
+    }
+
+    private function getRecentGeoIp(string $ip): ?GeoIp
+    {
+        return GeoIp::query()
+            ->whereIpAddress($ip)
+            ->whereIsSuccess(true)
+            ->orderByDesc('id')
+            ->first();
+    }
+
+    private function shouldAttachExistingGeoIp(?GeoIp $geoIp): bool
+    {
+        return $geoIp && $geoIp->created_at->diffInDays(now()) < 1;
+    }
+
+    private function shouldCreateNewGeoIp(?GeoIp $geoIp, GeoIpOutput $searchGeoIp): bool
+    {
+        return blank($geoIp?->id)
+            || $geoIp->lat !== $searchGeoIp->lat
+            || $geoIp->lon !== $searchGeoIp->lon;
+    }
+
+    private function createGeoIp(string $ip, GeoIpOutput $searchGeoIp): GeoIp
+    {
+        return GeoIp::create([
+            'ip_address'   => $ip,
+            'country'      => $searchGeoIp->country,
+            'region'       => $searchGeoIp->region,
+            'region_name'  => $searchGeoIp->regionName,
+            'country_code' => $searchGeoIp->countryCode,
+            'city'         => $searchGeoIp->city,
+            'zip'          => $searchGeoIp->zip,
+            'lat'          => $searchGeoIp->lat,
+            'lon'          => $searchGeoIp->lon,
+            'timezone'     => $searchGeoIp->timezone,
+            'isp'          => $searchGeoIp->isp,
+            'org'          => $searchGeoIp->org,
+            'as'           => $searchGeoIp->as,
+            'is_success'   => $searchGeoIp->isSuccess,
+        ]);
     }
 }
