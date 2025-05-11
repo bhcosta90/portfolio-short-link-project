@@ -15,7 +15,7 @@ final class ShortLinkResource extends JsonResource
     {
         return [
             'id'         => $this->hash_id,
-            'user_id'    => $this->user_id,
+            'user_id'    => $this->hash_user_id,
             'slug'       => $this->slug,
             'code'       => $this->code,
             'short_link' => $this->short_link,
