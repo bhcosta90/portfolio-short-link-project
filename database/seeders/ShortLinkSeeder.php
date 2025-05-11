@@ -4,14 +4,19 @@ declare(strict_types = 1);
 
 namespace Database\Seeders;
 
-use App\Events\ShortLink\ShortLinkRecordedEvent;
 use App\Models\GeoIp;
 use App\Models\ShortLink;
+use App\Services\ShortLinkClickService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 final class ShortLinkSeeder extends Seeder
 {
+    public function __construct(
+        protected ShortLinkClickService $linkClickService,
+    ) {
+    }
+
     public function run(): void
     {
         DB::transaction(function () {
@@ -36,11 +41,11 @@ final class ShortLinkSeeder extends Seeder
                 };
 
                 for ($i = 0; $i < $total; ++$i) {
-                    event(new ShortLinkRecordedEvent(
-                        id: $shortLink->id,
-                        endpoint: $shortLink->endpoint,
-                        ipAddress: $ip,
-                    ));
+                    $this->linkClickService->store([
+                        'id'         => $shortLink->id,
+                        'endpoint'   => $shortLink->endpoint,
+                        'ip_address' => $ip,
+                    ]);
                 }
             }
         });

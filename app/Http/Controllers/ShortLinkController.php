@@ -4,12 +4,12 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
-use App\Events\ShortLink\ShortLinkRecordedEvent;
 use App\Http\Requests\ShortLinkRequest;
 use App\Http\Resources\ShortLinkClickResource;
 use App\Http\Resources\ShortLinkResource;
 use App\Models\ShortLink;
 use App\Models\ShortLinkClick;
+use App\Services\ShortLinkClickService;
 use App\Services\ShortLinkService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -91,7 +91,7 @@ final class ShortLinkController extends Controller
         return $this->responseShortLink($shortLink);
     }
 
-    protected function responseShortLink(array $data): RedirectResponse | string
+    protected function responseShortLink(array $data, ShortLinkClickService $service): RedirectResponse | string
     {
         $ip = request()->ip();
 
@@ -99,12 +99,12 @@ final class ShortLinkController extends Controller
             $ip = $newIp;
         }
 
-        return DB::transaction(function () use ($data, $ip) {
-            event(new ShortLinkRecordedEvent(
-                id: $data['id'],
-                endpoint: $data['endpoint'],
-                ipAddress: $ip,
-            ));
+        return DB::transaction(function () use ($data, $ip, $service) {
+            $service->store([
+                'id'         => $data['id'],
+                'ip_address' => $ip,
+                'endpoint'   => $data['endpoint'],
+            ]);
 
             if (app()->isLocal()) {
                 return __('Vai ser redirecionado para o endpoint: :endpoint', [
