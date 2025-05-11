@@ -32,8 +32,10 @@ final readonly class IpApiGeoIp implements GeoIpInterface
                     isSuccess: true
                 );
             }
+
         } catch (Throwable) {
-            return new SearchOutput();
         }
+
+        return new SearchOutput();
     }
 }

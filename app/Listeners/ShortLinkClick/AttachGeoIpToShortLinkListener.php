@@ -40,9 +40,9 @@ final class AttachGeoIpToShortLinkListener implements ShouldQueue
 
         $searchGeoIp = GeoIpFacade::search($event->ipAddress);
 
-        if ($this->shouldCreateNewGeoIp($geoIp, $searchGeoIp)) {
-            $geoIp = $this->createGeoIp($event->ipAddress, $searchGeoIp);
-        }
+        $geoIp = $this->shouldCreateNewGeoIp($geoIp, $searchGeoIp)
+            ? $this->createGeoIp($event->ipAddress, $searchGeoIp)
+            : tap($geoIp)->touch();
 
         $shortLink->geo_ip_id = $geoIp->id;
         $shortLink->save();
@@ -52,14 +52,13 @@ final class AttachGeoIpToShortLinkListener implements ShouldQueue
     {
         return GeoIp::query()
             ->whereIpAddress($ip)
-            ->whereIsSuccess(true)
             ->orderByDesc('id')
             ->first();
     }
 
     private function shouldAttachExistingGeoIp(?GeoIp $geoIp): bool
     {
-        return $geoIp && $geoIp->created_at->diffInDays(now()) < 1;
+        return $geoIp && $geoIp->updated_at->diffInDays(now()) < 1;
     }
 
     private function shouldCreateNewGeoIp(?GeoIp $geoIp, SearchOutput $searchGeoIp): bool
