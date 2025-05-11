@@ -13,7 +13,6 @@ trait ValidateAction
     {
         if (null === $rules) {
             $backtrace    = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-            $caller       = ucfirst($backtrace[1]['function'] ?? '');
             $className    = self::class;
             $serviceName  = class_basename($className);
             $trimmedName  = preg_replace('/Action$/', '', $serviceName);
