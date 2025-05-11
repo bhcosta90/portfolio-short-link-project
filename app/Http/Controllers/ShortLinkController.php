@@ -91,7 +91,7 @@ final class ShortLinkController extends Controller
         return $this->responseShortLink($shortLink);
     }
 
-    protected function responseShortLink(array $data, ShortLinkClickService $service): RedirectResponse | string
+    protected function responseShortLink(array $data): RedirectResponse | string
     {
         $ip = request()->ip();
 
@@ -99,8 +99,8 @@ final class ShortLinkController extends Controller
             $ip = $newIp;
         }
 
-        return DB::transaction(function () use ($data, $ip, $service) {
-            $service->store([
+        return DB::transaction(function () use ($data, $ip) {
+            app(ShortLinkClickService::class)->store([
                 'id'         => $data['id'],
                 'ip_address' => $ip,
                 'endpoint'   => $data['endpoint'],
