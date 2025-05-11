@@ -18,7 +18,7 @@ trait ValidateAction
             $lastPart     = array_pop($parts);
             $serviceName  = class_basename($className);
             $trimmedName  = preg_replace('/Action$/', '', $serviceName);
-            $classRequest = "App\\Http\\Requests\\Actions\\{$lastPart}\\{$trimmedName}Request";
+            $classRequest = "App\\Http\\Requests\\{$lastPart}\\Actions\\{$trimmedName}Request";
 
             if (config('laravel-package.request')) {
                 $namespace    = mb_substr($className, 0, mb_strrpos($className, '\\'));
