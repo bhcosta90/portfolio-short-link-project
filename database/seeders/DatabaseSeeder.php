@@ -13,8 +13,8 @@ final class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create([
-            'name'  => 'Test User',
-            'email' => 'test@example.com',
+            'name'  => 'Bruno Henrique da Costa',
+            'email' => 'bhcosta90@gmail.com',
         ]);
 
         $this->call(ShortLinkSeeder::class);
