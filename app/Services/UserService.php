@@ -18,7 +18,7 @@ final class UserService
         $dataValidated = $this->validate($data);
 
         $user = User::query()
-            ->where('email', $dataValidated['email'])
+            ->whereEmail($dataValidated['email'])
             ->first();
 
         if ($user) {
