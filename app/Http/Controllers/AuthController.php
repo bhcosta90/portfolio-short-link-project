@@ -13,4 +13,19 @@ final class AuthController
     {
         $userService->sendCode($request->all());
     }
+
+    public function login(UserService $userService, Request $request)
+    {
+        $user = $userService->login($request->all());
+
+        if ($user) {
+            return response()->json([
+                'token' => $user->createToken('api-service')->plainTextToken,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Invalid credentials',
+        ], 401);
+    }
 }

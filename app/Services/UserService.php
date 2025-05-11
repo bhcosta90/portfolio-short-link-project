@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Notifications\User\SendCodeNotification;
 use Core\Validation\ValidateService;
+use Illuminate\Support\Facades\Hash;
 
 final class UserService
 {
@@ -29,5 +30,23 @@ final class UserService
         }
 
         return false;
+    }
+
+    public function login(array $data): ?User
+    {
+        $dataValidated = $this->validate($data);
+
+        $user = User::query()
+            ->whereEmail($data['email'])
+            ->first();
+
+        if ($user && Hash::check($dataValidated['code'], $user->token)) {
+            $user->token = null;
+            $user->save();
+
+            return $user;
+        }
+
+        return null;
     }
 }
