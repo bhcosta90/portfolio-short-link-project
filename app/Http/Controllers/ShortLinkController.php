@@ -27,6 +27,9 @@ final class ShortLinkController extends Controller
         abort_unless(Auth::check(), 403, __('Unauthorized access'));
 
         $result = ShortLink::query()
+            ->withCount([
+                'shortLinkClicks',
+            ])
             ->byUser(Auth::id())
             ->simplePaginate();
 
@@ -46,7 +49,7 @@ final class ShortLinkController extends Controller
     {
         $shortLink = ShortLink::query()
             ->with([
-                'shortLinkClicks',
+                'shortLinkClicks' => fn ($query) => $query->count(),
             ])
             ->whereId(Hashids::decode($short_link))
             ->firstOrFail();

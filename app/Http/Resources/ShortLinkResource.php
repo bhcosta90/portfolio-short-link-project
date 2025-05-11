@@ -21,7 +21,7 @@ final class ShortLinkResource extends JsonResource
             'short_link' => $this->short_link,
             'endpoint'   => $this->endpoint,
             'expired_at' => $this->expired_at,
-            'clicks'     => $this->whenLoaded('shortLinkClicks', fn () => $this->shortLinkClicks->count()),
+            'clicks'     => $this->whenCounted('shortLinkClicks_count'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
