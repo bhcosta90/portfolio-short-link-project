@@ -15,8 +15,10 @@ final class UserService
 
     public function sendCode(array $data): bool
     {
+        $dataValidated = $this->validate($data);
+
         $user = User::query()
-            ->where('email', $data['email'])
+            ->where('email', $dataValidated['email'])
             ->first();
 
         if ($user) {
@@ -42,6 +44,11 @@ final class UserService
 
         if ($user && Hash::check($dataValidated['code'], $user->token)) {
             $user->token = null;
+
+            if ($user->email_verified_at) {
+                $user->email_verified_at = now();
+            }
+
             $user->save();
 
             return $user;
