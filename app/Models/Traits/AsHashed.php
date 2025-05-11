@@ -23,7 +23,7 @@ trait AsHashed
     {
         foreach ($this->getAttributes() as $key => $value) {
             if ($this->isHashableKey($key)) {
-                $this->{"hash_{$key}"} = Hashids::encode($value);
+                $this->{"hash_{$key}"} = when($value, Hashids::encode($value));
             }
         }
     }
