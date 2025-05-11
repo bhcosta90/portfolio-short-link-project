@@ -1,0 +1,62 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace Core\Validation;
+
+use Exception;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+
+trait ValidateServiceAction
+{
+    protected function validate(array $data, ?array $rules = null): array
+    {
+        if (null === $rules) {
+            $classRequest = $this->resolveRequestClass();
+
+            if (!class_exists($classRequest)) {
+                throw new Exception(__('Request class :class not found.', ['class' => $classRequest]));
+            }
+
+            $request = new $classRequest();
+            $request->replace($data);
+
+            abort_unless($request->authorize(), 403, __('Unauthorized action.'));
+
+            return $request->validate($request->rules());
+        }
+
+        return $this->validateWithRules($data, $rules);
+    }
+
+    private function resolveRequestClass(): string
+    {
+        $className   = self::class;
+        $serviceName = class_basename($className);
+        $namespace   = mb_substr($className, 0, mb_strrpos($className, '\\'));
+
+        if (str_ends_with($serviceName, 'Action')) {
+            $trimmedName = preg_replace('/Action$/', '', $serviceName);
+
+            return "{$namespace}\\Requests\\{$trimmedName}Request";
+        }
+
+        $backtrace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        $caller      = ucfirst($backtrace[1]['function'] ?? '');
+        $trimmedName = preg_replace('/Service$/', '', $serviceName);
+
+        return "{$namespace}\\Requests\\$trimmedName\\{$caller}Request";
+    }
+
+    private function validateWithRules(array $data, array $rules): array
+    {
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator, __('Validation failed.'));
+        }
+
+        return $validator->validated();
+    }
+}
