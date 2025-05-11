@@ -12,6 +12,10 @@ final class AuthController
     public function sendCode(UserService $userService, Request $request)
     {
         $userService->sendCode($request->all());
+
+        return response()->json([
+            'message' => __('Code sent successfully'),
+        ]);
     }
 
     public function login(UserService $userService, Request $request)
