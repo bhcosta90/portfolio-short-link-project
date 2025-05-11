@@ -15,6 +15,7 @@ final readonly class ShortLinkService
         return app(CreateShortLinkAction::class)->handle($data);
     }
 
+    /** @return Builder<ShortLink> */
     public function queryRedirect(): Builder
     {
         return ShortLink::query()
