@@ -10,14 +10,13 @@ Route::prefix('api')->group(function (): void {
     Route::get('/user', fn (Request $request) => $request->user())->middleware('auth:sanctum');
 
     Route::prefix('v1')->group(function (): void {
-
-        Route::prefix('short-links/{shortLink}')->group(function () {
-            Route::get('clicks', [ShortLinkController::class, 'clicks']);
+        Route::prefix('short-links')->group(function () {
+            include __DIR__ . '/v1/short_links.php';
         });
 
-        Route::apiResource('short-links', ShortLinkController::class)
-            ->only(['index', 'store', 'show'])
-            ->middleware(request()->header('Authorization') ? 'auth:sanctum' : null);
+        Route::prefix('auth')->group(function () {
+            include __DIR__ . '/v1/auth.php';
+        });
     });
 });
 

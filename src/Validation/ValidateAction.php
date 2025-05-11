@@ -13,10 +13,17 @@ trait ValidateAction
     {
         if (null === $rules) {
             $className    = self::class;
+            $namespace    = mb_substr($className, 0, mb_strrpos($className, '\\'));
+            $parts        = explode('\\', $namespace);
+            $lastPart     = array_pop($parts);
             $serviceName  = class_basename($className);
             $trimmedName  = preg_replace('/Action$/', '', $serviceName);
-            $namespace    = mb_substr($className, 0, mb_strrpos($className, '\\'));
-            $classRequest = "{$namespace}\\Requests\\{$trimmedName}Request";
+            $classRequest = "App\\Http\\Requests\\Actions\\{$lastPart}\\{$trimmedName}Request";
+
+            if (config('laravel-package.request')) {
+                $namespace    = mb_substr($className, 0, mb_strrpos($className, '\\'));
+                $classRequest = "{$namespace}\\Requests\\{$trimmedName}Request";
+            }
 
             $request = new $classRequest();
             $request->replace($data);

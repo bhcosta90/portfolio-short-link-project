@@ -12,13 +12,17 @@ trait ValidateService
     protected function validate(array $data, ?array $rules = null): array
     {
         if (null === $rules) {
-            $backtrace    = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-            $caller       = ucfirst($backtrace[1]['function'] ?? '');
             $className    = self::class;
             $serviceName  = class_basename($className);
             $trimmedName  = preg_replace('/Service$/', '', $serviceName);
-            $namespace    = mb_substr($className, 0, mb_strrpos($className, '\\'));
-            $classRequest = "{$namespace}\\Requests\\$trimmedName\\{$caller}Request";
+            $backtrace    = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+            $caller       = ucfirst($backtrace[1]['function'] ?? '');
+            $classRequest = "App\\Http\\Requests\\{$trimmedName}\\{$caller}Request";
+
+            if (config('laravel-package.request')) {
+                $namespace    = mb_substr($className, 0, mb_strrpos($className, '\\'));
+                $classRequest = "{$namespace}\\Requests\\$trimmedName\\{$caller}Request";
+            }
 
             $request = new $classRequest();
             $request->replace($data);

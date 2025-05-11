@@ -2,17 +2,16 @@
 
 declare(strict_types = 1);
 
-namespace App\Services\Requests\ShortLinkClick;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-final class StoreRequest extends FormRequest
+final class SendCodeRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'endpoint'   => ['required'],
-            'ip_address' => ['required', 'ip'],
+
         ];
     }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Actions\ShortLink\Requests;
+namespace App\Http\Requests\Actions\ShortLink;
 
 use App\Rules\SlugRule;
 use Illuminate\Foundation\Http\FormRequest;
