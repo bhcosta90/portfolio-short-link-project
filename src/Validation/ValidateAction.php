@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Core\Validation;
 
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -28,7 +29,7 @@ trait ValidateAction
             $request = new $classRequest();
             $request->replace($data);
 
-            abort_unless($request->authorize(), 403, __('Unauthorized action.'));
+            abort_unless($request->authorize(), Response::HTTP_FORBIDDEN, __('Unauthorized action.'));
 
             return $request->validate($request->rules());
         }
