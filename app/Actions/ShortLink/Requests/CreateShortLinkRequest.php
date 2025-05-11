@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace App\Http\Requests;
+namespace App\Actions\ShortLink\Requests;
 
 use App\Rules\SlugRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class ShortLinkRequest extends FormRequest
+final class CreateShortLinkRequest extends FormRequest
 {
     public function rules(): array
     {

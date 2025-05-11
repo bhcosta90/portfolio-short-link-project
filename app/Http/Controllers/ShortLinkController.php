@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ShortLinkRequest;
 use App\Http\Resources\ShortLinkClickResource;
 use App\Http\Resources\ShortLinkResource;
 use App\Models\ShortLink;
@@ -12,6 +11,7 @@ use App\Models\ShortLinkClick;
 use App\Services\ShortLinkClickService;
 use App\Services\ShortLinkService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -33,9 +33,9 @@ final class ShortLinkController extends Controller
         return ShortLinkResource::collection($result);
     }
 
-    public function store(ShortLinkRequest $request, ShortLinkService $service): ShortLinkResource
+    public function store(Request $request, ShortLinkService $service): ShortLinkResource
     {
-        $shortLink = $service->store($request->validated() + [
+        $shortLink = $service->store($request->all() + [
             'user_id' => auth()?->id(),
         ]);
 

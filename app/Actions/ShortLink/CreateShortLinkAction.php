@@ -6,15 +6,20 @@ namespace App\Actions\ShortLink;
 
 use App\Models\ShortLink;
 use App\Models\User;
+use Core\Validation\ValidateAction;
 
 final readonly class CreateShortLinkAction
 {
+    use ValidateAction;
+
     public function handle(array $data): ShortLink
     {
-        $user = $this->getUser($data['user_id'] ?? null);
+        $dataValidate = $this->validate($data);
+
+        $user = $this->getUser($dataValidate['user_id'] ?? null);
         $days = $this->getExpirationDays($user);
 
-        $data = $this->prepareData($data, $user, $days);
+        $data = $this->prepareData($dataValidate, $user, $days);
 
         return ShortLink::create($data);
     }
