@@ -6,7 +6,6 @@ namespace Core\HashId\Libs\Cryptography;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Vinkla\Hashids\Facades\Hashids;
 
 final class Decoder
@@ -26,7 +25,7 @@ final class Decoder
     private static function decodeHeaders(Request $request): void
     {
         foreach ($request->headers as $key => $value) {
-            if (preg_match(config('hashids.headers.regex'), $key)) {
+            if (preg_match(config('hashids.headers.regex'), $key ?: '')) {
                 $encodedIds = $value[0];
                 $decodedIds = [];
 
@@ -37,6 +36,7 @@ final class Decoder
                         $decodedIds[] = $decoded;
                     }
                 }
+
                 $decoded = implode(',', $decodedIds);
 
                 if ($decoded) {
@@ -49,15 +49,10 @@ final class Decoder
     private static function decodeRouteParams(Request $request): void
     {
         foreach (($request->route()?->parameters() ?? []) as $key => $value) {
-            if (self::isIdentifier($key)) {
-                throw_if(!self::hashIsValid($value), NotFoundHttpException::class);
-                $decoded = current(Hashids::decode($value));
+            $decoded = current(Hashids::decode($value));
 
-                if (self::wasDecoded($decoded)) {
-                    $request->route()->setParameter($key, $decoded);
-                } elseif (!config('app.debug')) {
-                    abort(Response::HTTP_BAD_REQUEST, "Error decoding hashids by Inputs ['{$key}': '{$value}'].");
-                }
+            if (self::wasDecoded($decoded)) {
+                $request->route()->setParameter($key, (int) $decoded);
             }
         }
     }

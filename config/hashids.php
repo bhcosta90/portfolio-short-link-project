@@ -4,6 +4,10 @@ declare(strict_types = 1);
 
 return [
     'enable_cryptography' => env('ENABLE_CRYPTOGRAPHY', true),
+    'regex'               => env('HASHID_REGEX', '/id$|_id$|Id$|_ids$/'), // Default
+    'headers'             => [
+        'regex' => env('HASHID_HEADER_REGEX', '/^(X-Admin|X-Agent|X-User)/i'),
+    ],
     /*
     |--------------------------------------------------------------------------
     | Default Connection Name

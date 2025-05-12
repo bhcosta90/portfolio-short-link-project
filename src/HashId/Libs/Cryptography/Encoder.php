@@ -33,7 +33,7 @@ final class Encoder
     public static function encodeArray($responseData): array
     {
         array_walk_recursive($responseData, function (&$value, $key): void {
-            if (self::isIdentifier((string) $key)) {
+            if (filled($value) && self::isIdentifier((string) $key)) {
                 $value = Hashids::encode($value);
             }
         });

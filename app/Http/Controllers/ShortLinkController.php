@@ -45,13 +45,13 @@ final class ShortLinkController extends Controller
         return new ShortLinkResource($shortLink->refresh());
     }
 
-    public function show(string $short_link): ShortLinkResource
+    public function show(int $id): ShortLinkResource
     {
         $shortLink = ShortLink::query()
             ->with([
                 'shortLinkClicks' => fn ($query) => $query->count(),
             ])
-            ->whereId(Hashids::decode($short_link))
+            ->whereId($id)
             ->firstOrFail();
 
         return new ShortLinkResource($shortLink);
