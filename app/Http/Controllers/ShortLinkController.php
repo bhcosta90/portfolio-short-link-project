@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ShortLinkClickResource;
 use App\Http\Resources\ShortLinkResource;
-use App\Models\ShortLink;
 use App\Models\ShortLinkClick;
 use App\Services\ShortLinkClickService;
 use App\Services\ShortLinkService;
@@ -21,16 +20,9 @@ use Vinkla\Hashids\Facades\Hashids;
 
 final class ShortLinkController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(ShortLinkService $service): AnonymousResourceCollection
     {
-
-        abort_unless(Auth::check(), 403, __('Unauthorized access'));
-
-        $result = ShortLink::query()
-            ->withCount([
-                'shortLinkClicks',
-            ])
-            ->byUser(Auth::id())
+        $result = $service->index(Auth::user())
             ->simplePaginate();
 
         return ShortLinkResource::collection($result);
@@ -38,23 +30,14 @@ final class ShortLinkController extends Controller
 
     public function store(Request $request, ShortLinkService $service): ShortLinkResource
     {
-        $shortLink = $service->store($request->all() + [
-            'user_id' => auth()?->id(),
-        ]);
+        $shortLink = $service->store(auth()->user(), $request->all());
 
         return new ShortLinkResource($shortLink->refresh());
     }
 
-    public function show(int $id): ShortLinkResource
+    public function show(int $id, ShortLinkService $service): ShortLinkResource
     {
-        $shortLink = ShortLink::query()
-            ->with([
-                'shortLinkClicks' => fn ($query) => $query->count(),
-            ])
-            ->whereId($id)
-            ->firstOrFail();
-
-        return new ShortLinkResource($shortLink);
+        return new ShortLinkResource($service->show($id));
     }
 
     public function clicks(string $short_link): AnonymousResourceCollection

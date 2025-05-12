@@ -7,12 +7,47 @@ namespace App\Services;
 use App\Actions\ShortLink\CreateShortLinkAction;
 use App\Models\ShortLink;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Response;
 
 final readonly class ShortLinkService
 {
-    public function store(array $data): ShortLink
+    use AuthorizesRequests;
+
+    public function index(?int $idUser): Builder
     {
-        return app(CreateShortLinkAction::class)->handle($data);
+        abort_unless(
+            $idUser,
+            Response::HTTP_FORBIDDEN,
+            __('Unauthorized access')
+        );
+
+        return ShortLink::query()
+            ->withCount([
+                'shortLinkClicks',
+            ])
+            ->byUser($idUser);
+    }
+
+    public function show(int $id): ShortLink
+    {
+        $shortLink = ShortLink::query()
+            ->withCount([
+                'shortLinkClicks',
+            ])
+            ->whereId($id)
+            ->sole();
+
+        if ($shortLink->user_id) {
+            $this->authorize('view', $shortLink);
+        }
+
+        return $shortLink;
+    }
+
+    public function store(?int $idUser, array $data): ShortLink
+    {
+        return app(CreateShortLinkAction::class)->handle($data + ['user_id' => $idUser]);
     }
 
     /** @return Builder<ShortLink> */
