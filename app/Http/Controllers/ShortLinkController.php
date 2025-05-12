@@ -22,7 +22,7 @@ final class ShortLinkController extends Controller
 {
     public function index(ShortLinkService $service): AnonymousResourceCollection
     {
-        $result = $service->index(Auth::user())
+        $result = $service->index(Auth::id())
             ->simplePaginate();
 
         return ShortLinkResource::collection($result);
