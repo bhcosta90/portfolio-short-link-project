@@ -91,7 +91,7 @@ final class ShortLinkController extends Controller
             ]);
 
             if (app()->isLocal()) {
-                return __('It will be redirected to Endpoint: :endpoint', [
+                return __('It will be redirected to endpoint: :endpoint', [
                     'endpoint' => $data['endpoint'],
                 ]);
             }
