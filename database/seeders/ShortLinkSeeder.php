@@ -52,6 +52,7 @@ final class ShortLinkSeeder extends Seeder
             ShortLink::factory()->create([
                 'code'    => 'INFXLA',
                 'user_id' => 1,
+                'slug'    => 'testing-slug',
             ]);
         });
     }
