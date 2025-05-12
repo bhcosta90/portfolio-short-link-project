@@ -3,7 +3,7 @@
 declare(strict_types = 1);
 
 return [
-
+    'enable_cryptography' => env('ENABLE_CRYPTOGRAPHY', true),
     /*
     |--------------------------------------------------------------------------
     | Default Connection Name

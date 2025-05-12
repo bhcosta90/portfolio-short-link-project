@@ -3,11 +3,12 @@
 declare(strict_types = 1);
 
 use App\Http\Controllers\ShortLinkController;
+use App\Http\Middleware\HashIdMiddleware;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('api')->group(function (): void {
+Route::prefix('api')->middleware([HashIdMiddleware::class])->group(function (): void {
     Route::prefix('v1')->group(function (): void {
         Route::prefix('short-links')->group(function () {
             include __DIR__ . '/v1/short_links.php';
