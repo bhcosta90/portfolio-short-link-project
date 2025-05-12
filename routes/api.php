@@ -3,8 +3,8 @@
 declare(strict_types = 1);
 
 use App\Http\Controllers\ShortLinkController;
-use App\Http\Middleware\HashIdMiddleware;
 use App\Http\Resources\UserResource;
+use Core\HashId\Middleware\HashIdMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

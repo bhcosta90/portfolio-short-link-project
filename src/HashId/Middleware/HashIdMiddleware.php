@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Http\Middleware;
+namespace Core\HashId\Middleware;
 
 use Closure;
 use Core\HashId\Libs\Cryptography\Decoder;
