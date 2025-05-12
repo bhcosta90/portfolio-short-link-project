@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Actions\ShortLink\CreateShortLinkAction;
 use App\Models\ShortLink;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Response;
@@ -14,7 +15,7 @@ final readonly class ShortLinkService
 {
     use AuthorizesRequests;
 
-    public function index(?int $idUser): Builder
+    public function index(?int $idUser): Paginator
     {
         abort_unless(
             $idUser,
@@ -26,7 +27,8 @@ final readonly class ShortLinkService
             ->withCount([
                 'shortLinkClicks',
             ])
-            ->byUser($idUser);
+            ->byUser($idUser)
+            ->simplePaginate();
     }
 
     public function show(int $id): ShortLink

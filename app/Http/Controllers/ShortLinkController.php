@@ -20,10 +20,7 @@ final class ShortLinkController extends Controller
 {
     public function index(ShortLinkService $service): AnonymousResourceCollection
     {
-        $result = $service->index(auth()->id())
-            ->simplePaginate();
-
-        return ShortLinkResource::collection($result);
+        return ShortLinkResource::collection($service->index(auth()->id()));
     }
 
     public function store(Request $request, ShortLinkService $service): ShortLinkResource
