@@ -13,16 +13,14 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Vinkla\Hashids\Facades\Hashids;
 
 final class ShortLinkController extends Controller
 {
     public function index(ShortLinkService $service): AnonymousResourceCollection
     {
-        $result = $service->index(Auth::id())
+        $result = $service->index(auth()->id())
             ->simplePaginate();
 
         return ShortLinkResource::collection($result);
@@ -30,7 +28,7 @@ final class ShortLinkController extends Controller
 
     public function store(Request $request, ShortLinkService $service): ShortLinkResource
     {
-        $shortLink = $service->store(auth()->user(), $request->all());
+        $shortLink = $service->store(auth()->id(), $request->all());
 
         return new ShortLinkResource($shortLink->refresh());
     }
@@ -40,13 +38,13 @@ final class ShortLinkController extends Controller
         return new ShortLinkResource($service->show($id));
     }
 
-    public function clicks(string $short_link): AnonymousResourceCollection
+    public function clicks(int $id): AnonymousResourceCollection
     {
         $clicks = ShortLinkClick::query()
             ->with([
                 'geoIp' => fn ($query) => $query->whereIsSuccess(true),
             ])
-            ->whereShortLinkId(Hashids::decode($short_link))
+            ->whereShortLinkId($id)
             ->orderBy('id', 'desc')
             ->paginate();
 
