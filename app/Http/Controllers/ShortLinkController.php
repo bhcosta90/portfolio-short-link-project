@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ShortLinkClickResource;
 use App\Http\Resources\ShortLinkResource;
-use App\Models\ShortLinkClick;
 use App\Services\ShortLinkClickService;
 use App\Services\ShortLinkService;
 use Illuminate\Http\RedirectResponse;
@@ -16,16 +15,12 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Vinkla\Hashids\Facades\Hashids;
 
 final class ShortLinkController extends Controller
 {
     public function index(ShortLinkService $service): AnonymousResourceCollection
     {
-        $result = $service->index(Auth::id())
-            ->simplePaginate();
-
-        return ShortLinkResource::collection($result);
+        return ShortLinkResource::collection($service->index(Auth::id()));
     }
 
     public function store(Request $request, ShortLinkService $service): ShortLinkResource
@@ -40,17 +35,9 @@ final class ShortLinkController extends Controller
         return new ShortLinkResource($service->show($id));
     }
 
-    public function clicks(string $short_link): AnonymousResourceCollection
+    public function clicks(int $id, ShortLinkService $service): AnonymousResourceCollection
     {
-        $clicks = ShortLinkClick::query()
-            ->with([
-                'geoIp' => fn ($query) => $query->whereIsSuccess(true),
-            ])
-            ->whereShortLinkId(Hashids::decode($short_link))
-            ->orderBy('id', 'desc')
-            ->paginate();
-
-        return ShortLinkClickResource::collection($clicks);
+        return ShortLinkClickResource::collection($service->clicks($id));
     }
 
     public function redirectId(string $code, ShortLinkService $service): RedirectResponse | string
