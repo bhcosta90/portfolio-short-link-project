@@ -2,7 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace App\Repositories\GeoIp;
+namespace App\Repositories\GeoIp\Interfaces;
+
+use App\Repositories\GeoIp\Data\SearchOutput;
 
 interface GeoIpInterface
 {

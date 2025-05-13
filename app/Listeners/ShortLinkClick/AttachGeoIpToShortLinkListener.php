@@ -8,7 +8,7 @@ use App\Events\ShortLinkClick\ShortLinkClickRecordedEvent;
 use App\Facades\GeoIpFacade;
 use App\Models\GeoIp;
 use App\Models\ShortLinkClick;
-use App\Repositories\GeoIp\SearchOutput;
+use App\Repositories\GeoIp\Data\SearchOutput;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 

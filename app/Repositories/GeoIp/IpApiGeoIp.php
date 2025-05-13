@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Repositories\GeoIp;
 
+use App\Repositories\GeoIp\Data\SearchOutput;
+use App\Repositories\GeoIp\Interfaces\GeoIpInterface;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
