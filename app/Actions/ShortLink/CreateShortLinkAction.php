@@ -21,7 +21,7 @@ final readonly class CreateShortLinkAction
 
         $data = $this->prepareData($dataValidate, $user, $days);
 
-        return ShortLink::create($data);
+        return ShortLink::create($data)->refresh();
     }
 
     private function generateNewCode(): string

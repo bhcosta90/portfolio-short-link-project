@@ -24,9 +24,7 @@ final class ShortLinkController extends Controller
 
     public function store(Request $request, ShortLinkService $service): ShortLinkResource
     {
-        $shortLink = $service->store(auth()->id(), $request->all());
-
-        return new ShortLinkResource($shortLink->refresh());
+        return new ShortLinkResource($service->store(auth()->id(), $request->all()));
     }
 
     public function show(int $id, ShortLinkService $service): ShortLinkResource
