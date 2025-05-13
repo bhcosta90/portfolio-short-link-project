@@ -12,7 +12,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -20,12 +19,12 @@ final class ShortLinkController extends Controller
 {
     public function index(ShortLinkService $service): AnonymousResourceCollection
     {
-        return ShortLinkResource::collection($service->index(Auth::id()));
+        return ShortLinkResource::collection($service->index(auth()->id()));
     }
 
     public function store(Request $request, ShortLinkService $service): ShortLinkResource
     {
-        $shortLink = $service->store(auth()->user(), $request->all());
+        $shortLink = $service->store(auth()->id(), $request->all());
 
         return new ShortLinkResource($shortLink->refresh());
     }
