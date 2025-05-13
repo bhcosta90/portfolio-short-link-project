@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Actions\ShortLink\CreateShortLinkAction;
 use App\Models\ShortLink;
+use App\Models\ShortLinkClick;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -50,6 +51,17 @@ final readonly class ShortLinkService
     public function store(?int $idUser, array $data): ShortLink
     {
         return app(CreateShortLinkAction::class)->handle($data + ['user_id' => $idUser]);
+    }
+
+    public function clicks(int $id): Paginator
+    {
+        return ShortLinkClick::query()
+            ->with([
+                'geoIp' => fn ($query) => $query->whereIsSuccess(true),
+            ])
+            ->whereShortLinkId($id)
+            ->orderBy('id', 'desc')
+            ->simplePaginate();
     }
 
     /** @return Builder<ShortLink> */

@@ -19,12 +19,12 @@ final readonly class ShortLinkClickService
 
         $shortLink = ShortLink::query()->findOrFail($data['id']);
 
-        $click = $shortLink?->shortLinkClicks()->create($dataValidated);
+        $click = $shortLink->shortLinkClicks()->create($dataValidated);
 
-        event(new ShortLinkClickRecordedEvent(
+        ShortLinkClickRecordedEvent::dispatch(
             id: $click->id,
             ipAddress: $data['ip_address'],
-        ));
+        );
 
         return $click;
     }

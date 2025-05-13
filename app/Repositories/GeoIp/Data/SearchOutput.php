@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Repositories\GeoIp;
+namespace App\Repositories\GeoIp\Data;
 
 final readonly class SearchOutput
 {

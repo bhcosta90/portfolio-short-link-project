@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ShortLinkClickResource;
 use App\Http\Resources\ShortLinkResource;
-use App\Models\ShortLinkClick;
 use App\Services\ShortLinkClickService;
 use App\Services\ShortLinkService;
 use Illuminate\Http\RedirectResponse;
@@ -25,9 +24,7 @@ final class ShortLinkController extends Controller
 
     public function store(Request $request, ShortLinkService $service): ShortLinkResource
     {
-        $shortLink = $service->store(auth()->id(), $request->all());
-
-        return new ShortLinkResource($shortLink->refresh());
+        return new ShortLinkResource($service->store(auth()->id(), $request->all()));
     }
 
     public function show(int $id, ShortLinkService $service): ShortLinkResource
@@ -35,22 +32,14 @@ final class ShortLinkController extends Controller
         return new ShortLinkResource($service->show($id));
     }
 
-    public function clicks(int $id): AnonymousResourceCollection
+    public function clicks(int $id, ShortLinkService $service): AnonymousResourceCollection
     {
-        $clicks = ShortLinkClick::query()
-            ->with([
-                'geoIp' => fn ($query) => $query->whereIsSuccess(true),
-            ])
-            ->whereShortLinkId($id)
-            ->orderBy('id', 'desc')
-            ->paginate();
-
-        return ShortLinkClickResource::collection($clicks);
+        return ShortLinkClickResource::collection($service->clicks($id));
     }
 
     public function redirectId(string $code, ShortLinkService $service): RedirectResponse | string
     {
-        $shortLink = Cache::remember('id_' . $code, 60 * 24, static function () use ($code, $service) {
+        $shortLink = Cache::remember('id_' . $code, now()->addHour(), static function () use ($code, $service) {
             return $service->queryRedirect()
                 ->whereCode($code)
                 ->firstOrFail()
@@ -62,7 +51,7 @@ final class ShortLinkController extends Controller
 
     public function redirectSlug(string $slug, ShortLinkService $service): RedirectResponse | string
     {
-        $shortLink = Cache::remember('slug_' . $slug, 60 * 24, static function () use ($slug, $service) {
+        $shortLink = Cache::remember('slug_' . $slug, now()->addHour(), static function () use ($slug, $service) {
             return $service->queryRedirect()
                 ->whereSlug($slug)
                 ->firstOrFail()
