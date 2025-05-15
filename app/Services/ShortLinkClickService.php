@@ -22,8 +22,8 @@ final readonly class ShortLinkClickService
         $click = $shortLink->shortLinkClicks()->create($dataValidated);
 
         ShortLinkClickRecordedEvent::dispatch(
-            id: $click->id,
-            ipAddress: $data['ip_address'],
+            $click->id,
+            $data['ip_address'],
         );
 
         return $click;

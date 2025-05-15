@@ -50,7 +50,7 @@ final class ShortLinkController extends Controller
 
     public function redirectId(string $code, ShortLinkService $service): RedirectResponse | string
     {
-        $shortLink = Cache::remember('id_' . $code, now()->addHour(), static function () use ($code, $service) {
+        $shortLink = Cache::remember('code_' . $code, now()->addHour(), static function () use ($code, $service) {
             return $service->queryRedirect()
                 ->whereCode($code)
                 ->firstOrFail()
