@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('api')->middleware([HashIdMiddleware::class])->group(function (): void {
     Route::prefix('v1')->group(function (): void {
-        Route::prefix('short-links')->group(function () {
+        Route::prefix('short-links')->middleware('auth:sanctum')->group(function () {
             include __DIR__ . '/v1/short_links.php';
         });
         Route::apiResource('short-links', ShortLinkController::class)

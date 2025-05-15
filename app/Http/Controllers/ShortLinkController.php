@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\ShortLink\ImportByExcelAction;
 use App\Http\Resources\ShortLinkClickResource;
 use App\Http\Resources\ShortLinkResource;
 use App\Services\ShortLinkClickService;
@@ -14,6 +15,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 final class ShortLinkController extends Controller
 {
@@ -35,6 +37,15 @@ final class ShortLinkController extends Controller
     public function clicks(int $id, ShortLinkService $service): AnonymousResourceCollection
     {
         return ShortLinkClickResource::collection($service->clicks($id));
+    }
+
+    public function imports(Request $request): void
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx',
+        ]);
+
+        Excel::import(new ImportByExcelAction($request->user()->id), request()->file('file'));
     }
 
     public function redirectId(string $code, ShortLinkService $service): RedirectResponse | string
