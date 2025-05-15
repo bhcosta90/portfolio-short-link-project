@@ -11,7 +11,6 @@ trait AsHashed
     public static function bootAsHashed(): void
     {
         static::retrieved(fn ($model) => $model->addHashedIds());
-
         static::saving(fn ($model) => $model->removeHashedIds());
     }
 
