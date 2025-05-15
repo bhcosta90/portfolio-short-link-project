@@ -20,15 +20,6 @@ final class ShortLink extends Model
     public const TOTAL_DAYS_FREE    = 30;
     public const TOTAL_DAYS_PREMIUM = 60;
 
-    protected $fillable = [
-        'user_id',
-        'slug',
-        'endpoint',
-        'is_premium',
-        'expired_at',
-        'code',
-    ];
-
     protected $casts = [
         'expired_at' => 'datetime',
     ];

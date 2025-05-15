@@ -11,10 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 final class ShortLinkClick extends Model
 {
     use AsHashed;
-    protected $fillable = [
-        'ip_address',
-        'endpoint',
-    ];
 
     public function geoIp(): BelongsTo
     {
