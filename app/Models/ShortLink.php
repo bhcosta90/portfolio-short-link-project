@@ -17,8 +17,8 @@ final class ShortLink extends Model
     use AsHashed;
     use HasFactory;
 
-    public const TOTAL_DAYS_FREE    = 3;
-    public const TOTAL_DAYS_PREMIUM = 7;
+    public const TOTAL_DAYS_FREE    = 30;
+    public const TOTAL_DAYS_PREMIUM = 60;
 
     protected $fillable = [
         'user_id',
