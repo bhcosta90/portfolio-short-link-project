@@ -11,13 +11,13 @@ use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-final class ImportByExcelAction implements ShouldQueue, ToModel, WithChunkReading
+final readonly class ImportByExcelAction implements ShouldQueue, ToModel, WithChunkReading
 {
-    public function __construct(protected int $userId)
+    public function __construct(private int $userId)
     {
     }
 
-    public function model(array $row)
+    public function model(array $row): void
     {
         $service = app(ShortLinkService::class);
 

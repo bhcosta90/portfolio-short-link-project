@@ -6,11 +6,11 @@ use App\Models\ShortLink;
 use App\Models\User;
 use App\Services\ShortLinkService;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->shortLinkService = new ShortLinkService();
 });
 
-it('creates a short link with the correct attributes', function () {
+it('creates a short link with the correct attributes', function (): void {
     $data = [
         'endpoint'   => 'https://example.com',
         'is_premium' => false,

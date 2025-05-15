@@ -10,22 +10,16 @@ trait AsHashed
 {
     public static function bootAsHashed(): void
     {
-        static::retrieved(function ($model): void {
-            $model->addHashedIds();
-        });
+        static::retrieved(fn ($model) => $model->addHashedIds());
 
-        static::saving(function ($model): void {
-            $model->removeHashedIds();
-        });
+        static::saving(fn ($model) => $model->removeHashedIds());
     }
 
     protected function addHashedIds(): void
     {
-        foreach ($this->getAttributes() as $key => $value) {
-            if ($this->isHashableKey($key)) {
-                $this->{"hash_{$key}"} = when($value, Hashids::encode($value));
-            }
-        }
+        collect($this->getAttributes())
+            ->filter(fn ($value, $key) => $this->isHashableKey($key))
+            ->each(fn ($value, $key) => $this->{"hash_{$key}"} = when($value, Hashids::encode($value)));
     }
 
     protected function removeHashedIds(): void

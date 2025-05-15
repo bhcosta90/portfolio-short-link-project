@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 return new class() extends Migration {
     public function up(): void
     {
-        Schema::create('geo_ips', function (Blueprint $table) {
+        Schema::create('geo_ips', function (Blueprint $table): void {
             $table->id();
             $table->ipAddress();
             $table->boolean('is_success')->boolean();

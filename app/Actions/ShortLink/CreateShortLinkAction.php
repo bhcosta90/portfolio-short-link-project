@@ -67,7 +67,7 @@ final readonly class CreateShortLinkAction
 
     private function generateRandomCode(int $length): string
     {
-        return mb_strtoupper(str()->random($length));
+        return mb_strtoupper((string) str()->random($length));
     }
 
     private function codeExists(string $code): bool

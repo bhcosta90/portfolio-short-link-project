@@ -13,13 +13,13 @@ use Illuminate\Support\Facades\DB;
 final class ShortLinkSeeder extends Seeder
 {
     public function __construct(
-        protected ShortLinkClickService $linkClickService,
+        private readonly ShortLinkClickService $linkClickService,
     ) {
     }
 
     public function run(): void
     {
-        DB::transaction(function () {
+        DB::transaction(function (): void {
             $shortLink = ShortLink::factory()->create([
                 'code' => 'INFXLU',
             ]);
@@ -57,7 +57,7 @@ final class ShortLinkSeeder extends Seeder
         });
     }
 
-    protected function getIps(): array
+    private function getIps(): array
     {
         return [
             '187.72.192.10'  => ['region' => 'SP', 'region_name' => 'São Paulo', 'country' => 'Brazil', 'country_code' => 'BR'],

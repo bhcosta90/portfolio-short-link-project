@@ -23,7 +23,7 @@ final class AuthController
     {
         $user = $userService->login($request->all());
 
-        if ($user) {
+        if ($user instanceof \App\Models\User) {
             return response()->json([
                 'token' => $user->createToken('api-service')->plainTextToken,
             ]);

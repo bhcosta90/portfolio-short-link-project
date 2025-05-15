@@ -37,41 +37,41 @@ final class AppServiceProvider extends ServiceProvider
         //
     }
 
-    protected function configureUrl(): void
+    private function configureUrl(): void
     {
         URL::forceHttps(app()->isProduction());
     }
 
-    protected function configureModel(): void
+    private function configureModel(): void
     {
         Model::shouldBeStrict();
         Model::unguard();
         Model::automaticallyEagerLoadRelationships();
     }
 
-    protected function configureTests(): void
+    private function configureTests(): void
     {
         Http::preventStrayRequests(!app()->isProduction());
     }
 
-    protected function configurePassword(): void
+    private function configurePassword(): void
     {
         if (app()->isProduction()) {
             Password::defaults(fn () => Password::min(12)->max(100)->uncompromised());
         }
     }
 
-    protected function configureDB(): void
+    private function configureDB(): void
     {
         DB::prohibitDestructiveCommands(app()->isProduction());
     }
 
-    protected function configureVite(): void
+    private function configureVite(): void
     {
         Vite::useAggressivePrefetching();
     }
 
-    protected function configureDate(): void
+    private function configureDate(): void
     {
         Date::use(CarbonImmutable::class);
     }

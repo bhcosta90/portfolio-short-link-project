@@ -86,7 +86,7 @@ test('it retrieves a short link by its hash ID', function (): void {
     ]);
 });
 
-it('redirects to the correct endpoint for a given slug with cache', closure: function () {
+it('redirects to the correct endpoint for a given slug with cache', closure: function (): void {
     Illuminate\Support\Facades\Event::fake();
 
     $shortLink = ShortLink::factory()->create(['slug' => 'test-slug']);
@@ -95,12 +95,12 @@ it('redirects to the correct endpoint for a given slug with cache', closure: fun
 
     Event::assertDispatched(
         ShortLinkRecordedEvent::class,
-        fn (ShortLinkRecordedEvent $event) => $event->id === $shortLink->id
+        fn (ShortLinkRecordedEvent $event): bool => $event->id === $shortLink->id
             && $event->endpoint === $shortLink->endpoint
             && filled($event->ipAddress));
 });
 
-it('redirects to the correct endpoint for a given slug', function () {
+it('redirects to the correct endpoint for a given slug', function (): void {
     $shortLink = ShortLink::factory()->create(['slug' => 'test-slug']);
 
     Cache::shouldReceive('remember')
@@ -116,7 +116,7 @@ it('redirects to the correct endpoint for a given slug', function () {
     $response->assertRedirect($shortLink->endpoint);
 });
 
-it('returns a message in local environment for a given slug', function () {
+it('returns a message in local environment for a given slug', function (): void {
     $this->app['env'] = 'local';
 
     $shortLink = ShortLink::factory()->create(['slug' => 'test-slug']);
@@ -134,7 +134,7 @@ it('returns a message in local environment for a given slug', function () {
     $response->assertSee('Vai ser redirecionado para o endpoint: ' . $shortLink->endpoint);
 });
 
-it('redirects to the correct endpoint for a given key with cache', function () {
+it('redirects to the correct endpoint for a given key with cache', function (): void {
     Illuminate\Support\Facades\Event::fake();
 
     $shortLink = ShortLink::factory()->create()->refresh();
@@ -143,12 +143,12 @@ it('redirects to the correct endpoint for a given key with cache', function () {
 
     Event::assertDispatched(
         ShortLinkRecordedEvent::class,
-        fn (ShortLinkRecordedEvent $event) => $event->id === $shortLink->id
+        fn (ShortLinkRecordedEvent $event): bool => $event->id === $shortLink->id
             && $event->endpoint === $shortLink->endpoint
             && filled($event->ipAddress));
 });
 
-it('redirects to the correct endpoint for a given key', function () {
+it('redirects to the correct endpoint for a given key', function (): void {
     $shortLink = ShortLink::factory()->create()->refresh();
 
     Cache::shouldReceive('remember')
@@ -164,7 +164,7 @@ it('redirects to the correct endpoint for a given key', function () {
     $response->assertRedirect($shortLink->endpoint);
 });
 
-it('returns a message in local environment for a given key', function () {
+it('returns a message in local environment for a given key', function (): void {
     $this->app['env'] = 'local';
 
     $shortLink = ShortLink::factory()->create();
