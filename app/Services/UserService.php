@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Notifications\User\SendCodeNotification;
-use Core\Validation\ValidateService;
+use Core\Actions\ValidateService;
 use Illuminate\Support\Facades\Hash;
 
 final class UserService

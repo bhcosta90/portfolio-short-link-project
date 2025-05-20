@@ -2,28 +2,27 @@
 
 declare(strict_types = 1);
 
-namespace Core\Validation;
+namespace Core\Actions;
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-trait ValidateAction
+trait ValidateService
 {
     protected function validate(array $data, ?array $rules = null): array
     {
         if (null === $rules) {
             $className    = self::class;
-            $namespace    = mb_substr($className, 0, mb_strrpos($className, '\\'));
-            $parts        = explode('\\', $namespace);
-            $lastPart     = array_pop($parts);
             $serviceName  = class_basename($className);
-            $trimmedName  = preg_replace('/Action$/', '', $serviceName);
-            $classRequest = "App\\Http\\Requests\\{$lastPart}\\Actions\\{$trimmedName}Request";
+            $trimmedName  = preg_replace('/Service$/', '', $serviceName);
+            $backtrace    = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+            $caller       = ucfirst($backtrace[1]['function'] ?? '');
+            $classRequest = "App\\Http\\Requests\\{$trimmedName}\\{$caller}Request";
 
             if (config('laravel-package.request')) {
                 $namespace    = mb_substr($className, 0, mb_strrpos($className, '\\'));
-                $classRequest = "{$namespace}\\Requests\\{$trimmedName}Request";
+                $classRequest = "{$namespace}\\Requests\\$trimmedName\\{$caller}Request";
             }
 
             $request = new $classRequest();

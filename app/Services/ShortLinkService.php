@@ -50,7 +50,7 @@ final readonly class ShortLinkService
 
     public function store(?int $idUser, array $data): ShortLink
     {
-        return app(CreateShortLinkAction::class)->handle($data + ['user_id' => $idUser]);
+        return CreateShortLinkAction::run($data + ['user_id' => $idUser]);
     }
 
     public function clicks(int $id): Paginator

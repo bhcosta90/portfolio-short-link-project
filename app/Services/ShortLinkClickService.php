@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Events\ShortLinkClick\ShortLinkClickRecordedEvent;
 use App\Models\ShortLink;
 use App\Models\ShortLinkClick;
-use Core\Validation\ValidateService;
+use Core\Actions\ValidateService;
 
 final readonly class ShortLinkClickService
 {
