@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Actions\ShortLink;
+namespace App\Excel\ShortLink;
 
 use App\Services\ShortLinkService;
 use Illuminate\Contracts\Queue\ShouldQueue;

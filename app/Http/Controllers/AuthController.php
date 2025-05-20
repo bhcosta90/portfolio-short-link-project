@@ -4,24 +4,25 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
-use App\Services\UserService;
+use App\Actions\User\LoginAction;
+use App\Actions\User\SendCodeAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 final class AuthController
 {
-    public function sendCode(UserService $userService, Request $request): JsonResponse
+    public function sendCode(Request $request): JsonResponse
     {
-        $userService->sendCode($request->all());
+        SendCodeAction::run($request->all());
 
         return response()->json([
             'message' => __('Code sent successfully'),
         ]);
     }
 
-    public function login(UserService $userService, Request $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
-        $user = $userService->login($request->all());
+        $user = LoginAction::run($request->all());
 
         if ($user instanceof \App\Models\User) {
             return response()->json([

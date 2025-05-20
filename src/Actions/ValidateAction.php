@@ -5,51 +5,62 @@ declare(strict_types = 1);
 namespace Core\Actions;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 
 trait ValidateAction
 {
     protected function validate(array | Arrayable $data): array
     {
-        if ($data instanceof Arrayable) {
-            $data = $data->toArray();
+        $data = $data instanceof Arrayable ? $data->toArray() : $data;
+
+        if (is_null($rules = $this->rules()) && method_exists($this, 'request')) {
+            return $this->validateWithRequest($data);
         }
 
-        if (null === ($rules = $this->rules())) {
-            $className    = self::class;
-            $namespace    = mb_substr($className, 0, mb_strrpos($className, '\\'));
-            $parts        = explode('\\', $namespace);
-            $lastPart     = array_pop($parts);
-            $serviceName  = class_basename($className);
-            $trimmedName  = preg_replace('/Action$/', '', $serviceName);
-            $classRequest = "App\\Http\\Requests\\{$lastPart}\\{$trimmedName}Request";
+        return $this->validateWithRules($data, $rules);
+    }
 
-            if (config('laravel-package.request')) {
-                $namespace    = mb_substr($className, 0, mb_strrpos($className, '\\'));
-                $classRequest = "{$namespace}\\Requests\\{$trimmedName}Request";
-            }
+    protected function rules(): ?array
+    {
+        return null;
+    }
 
-            $request = new $classRequest();
-            $request->replace($data);
+    private function validateWithRequest(array $data): array
+    {
+        $request = $this->createRequestInstance();
 
-            abort_unless($request->authorize(), Response::HTTP_FORBIDDEN, __('Unauthorized action.'));
+        $request->replace($data);
 
-            return $request->validate($request->rules());
+        abort_unless($request->authorize(), Response::HTTP_FORBIDDEN, __('Unauthorized action.'));
+
+        return $request->validate($request->rules());
+    }
+
+    private function createRequestInstance(): FormRequest
+    {
+        $classRequest = $this->request();
+
+        $request = new $classRequest();
+
+        if (!$request instanceof FormRequest) {
+            throw new RuntimeException('The request must be an instance of FormRequest');
         }
 
-        $validator = Validator::make($data, $rules);
+        return $request;
+    }
+
+    private function validateWithRules(array $data, ?array $rules): array
+    {
+        $validator = Validator::make($data, $rules ?: []);
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
 
         return $validator->validated();
-    }
-
-    protected function rules(): ?array
-    {
-        return null;
     }
 }

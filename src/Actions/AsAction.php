@@ -13,23 +13,27 @@ trait AsAction
 
     final public static function run(...$arguments)
     {
-        $result = app(static::class);
+        $instance = self::getInstance();
 
-        if (!method_exists($result, 'execute')) {
+        if (!method_exists($instance, 'execute')) {
             throw new RuntimeException('The execute method is not defined in the action class.');
         }
 
-        return app(static::class)
-            ->execute($result->validate($arguments[0]));
+        return $instance->execute($instance->validate($arguments[0]));
     }
 
     final public static function dispatch(...$arguments): void
     {
-        dispatch(fn () => app(static::class)::run(...$arguments));
+        dispatch(fn () => self::run(...$arguments));
     }
 
     final public static function defer(...$arguments): void
     {
-        Concurrency::defer(fn () => app(static::class)::run(...$arguments));
+        Concurrency::defer(fn () => self::run(...$arguments));
+    }
+
+    private static function getInstance(): self
+    {
+        return app(static::class);
     }
 }

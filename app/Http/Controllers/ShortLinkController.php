@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\ShortLink\ImportByExcelAction;
+use App\Actions\ShortLinkClick\ClickAction;
+use App\Excel\ShortLink\ImportByExcelAction;
 use App\Http\Resources\ShortLinkClickResource;
 use App\Http\Resources\ShortLinkResource;
-use App\Services\ShortLinkClickService;
 use App\Services\ShortLinkService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -77,9 +77,9 @@ final class ShortLinkController extends Controller
         }
 
         return DB::transaction(function () use ($data, $ip) {
-            app(ShortLinkClickService::class)->store([
-                'id'         => $data['id'],
+            ClickAction::run([
                 'ip_address' => $ip,
+                'id'         => $data['id'],
                 'endpoint'   => $data['endpoint'],
             ]);
 

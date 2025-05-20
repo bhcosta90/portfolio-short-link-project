@@ -11,6 +11,7 @@ final class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id'         => ['required'],
             'endpoint'   => ['required'],
             'ip_address' => ['required', 'ip'],
         ];

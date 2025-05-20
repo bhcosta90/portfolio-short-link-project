@@ -4,11 +4,12 @@ declare(strict_types = 1);
 
 namespace App\Actions\ShortLink;
 
+use App\Http\Requests\ShortLink\StoreRequest;
 use App\Models\ShortLink;
 use App\Models\User;
 use Core\Actions\AsAction;
 
-final readonly class StoreAction
+final readonly class CreateShortLinkAction
 {
     use AsAction;
 
@@ -20,6 +21,11 @@ final readonly class StoreAction
         $data = $this->prepareData($data, $user, $days);
 
         return ShortLink::create($data)->refresh();
+    }
+
+    protected function request(): StoreRequest
+    {
+        return new StoreRequest();
     }
 
     private function generateNewCode(): string
