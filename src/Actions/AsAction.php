@@ -19,9 +19,8 @@ trait AsAction
             throw new RuntimeException('The execute method is not defined in the action class.');
         }
 
-        $data = $result->validate($arguments[0]);
-
-        return app(static::class)->execute($data);
+        return app(static::class)
+            ->execute($result->validate($arguments[0]));
     }
 
     final public static function dispatch(...$arguments): void
