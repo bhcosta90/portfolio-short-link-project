@@ -4,14 +4,19 @@ declare(strict_types = 1);
 
 namespace Core\Actions;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 trait ValidateAction
 {
-    protected function validate(array $data): array
+    protected function validate(array | Arrayable $data): array
     {
+        if ($data instanceof Arrayable) {
+            $data = $data->toArray();
+        }
+
         if (null === ($rules = $this->rules())) {
             $className    = self::class;
             $namespace    = mb_substr($className, 0, mb_strrpos($className, '\\'));
