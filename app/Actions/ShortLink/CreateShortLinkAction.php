@@ -7,12 +7,13 @@ namespace App\Actions\ShortLink;
 use App\Models\ShortLink;
 use App\Models\User;
 use Core\Actions\AsAction;
+use Illuminate\Contracts\Support\Arrayable;
 
 final readonly class CreateShortLinkAction
 {
     use AsAction;
 
-    protected function execute(array $data): ShortLink
+    protected function execute(array | Arrayable $data): ShortLink
     {
         $user = $this->getUser($dataValidate['user_id'] ?? null);
         $days = $this->getExpirationDays($user);
