@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Core\Actions;
 
 use Illuminate\Support\Facades\Concurrency;
+use RuntimeException;
 
 trait AsAction
 {
@@ -13,7 +14,12 @@ trait AsAction
     final public static function run(...$arguments)
     {
         $result = app(static::class);
-        $data   = $result->validate($arguments[0]);
+
+        if (!method_exists($result, 'execute')) {
+            throw new RuntimeException('The execute method is not defined in the action class.');
+        }
+
+        $data = $result->validate($arguments[0]);
 
         return app(static::class)->execute($data);
     }
