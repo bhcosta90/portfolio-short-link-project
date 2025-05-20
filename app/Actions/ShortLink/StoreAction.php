@@ -8,7 +8,7 @@ use App\Models\ShortLink;
 use App\Models\User;
 use Core\Actions\AsAction;
 
-final readonly class CreateShortLinkAction
+final readonly class StoreAction
 {
     use AsAction;
 

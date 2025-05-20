@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Services;
 
-use App\Actions\ShortLink\CreateShortLinkAction;
+use App\Actions\ShortLink\StoreAction;
 use App\Models\ShortLink;
 use App\Models\ShortLinkClick;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -50,7 +50,7 @@ final readonly class ShortLinkService
 
     public function store(?int $idUser, array $data): ShortLink
     {
-        return CreateShortLinkAction::run($data + ['user_id' => $idUser]);
+        return StoreAction::run($data + ['user_id' => $idUser]);
     }
 
     public function clicks(int $id): Paginator

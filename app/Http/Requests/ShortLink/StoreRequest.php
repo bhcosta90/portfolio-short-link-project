@@ -9,7 +9,7 @@ use App\Rules\SlugRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class CreateShortLinkRequest extends FormRequest
+final class StoreRequest extends FormRequest
 {
     public function rules(): array
     {
