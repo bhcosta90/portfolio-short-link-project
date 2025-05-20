@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Http\Requests\ShortLink\Actions;
+namespace App\Http\Requests\ShortLink;
 
 use App\Models\User;
 use App\Rules\SlugRule;
