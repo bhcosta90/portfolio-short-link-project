@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Services;
 
+use App\Http\Requests\User\LoginRequest;
+use App\Http\Requests\User\SendCodeRequest;
 use App\Models\User;
 use App\Notifications\User\SendCodeNotification;
 use Core\Services\ValidateService;
@@ -15,7 +17,7 @@ final class UserService
 
     public function sendCode(array $data): bool
     {
-        $dataValidated = $this->validate($data);
+        $dataValidated = $this->validate($data, new SendCodeRequest());
 
         $user = User::query()
             ->whereEmail($dataValidated['email'])
@@ -36,7 +38,7 @@ final class UserService
 
     public function login(array $data): ?User
     {
-        $dataValidated = $this->validate($data);
+        $dataValidated = $this->validate($data, new LoginRequest());
 
         $user = User::query()
             ->whereEmail($data['email'])
